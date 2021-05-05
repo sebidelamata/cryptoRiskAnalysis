@@ -3,6 +3,7 @@
 library(quantmod)
 library(zoo)
 library(tidyr)
+library(xts)
 
 # list out the underlyings we want to compare
 underlyingsList <- c("SPY", 
@@ -16,7 +17,7 @@ underlyingsList <- c("SPY",
                      "TLT")
 
 # define our start date for our series
-startDate <- Sys.Date() - 365
+startDate <- Sys.Date() - 365 * 10
 
 # define our end date for our series
 endDate <- Sys.Date()
@@ -62,8 +63,31 @@ underlyingsDF$Date <- as.Date(underlyingsDF$Date)
 # drop NAs
 underlyingsDF <- na.omit(underlyingsDF)
 
+#create underlyingsDF as ZOO
+underlyingsDF <- read.zoo(underlyingsDF, 
+                          format = "%Y-%m-%d")
+
 # let's print the head and take a looky-see
+class(underlyingsDF)
 head(underlyingsDF)
 tail(underlyingsDF)
 summary(underlyingsDF)
-plot(underlyingsDF)
+
+
+# plot them in one graph
+plot.zoo(underlyingsDF)
+
+# plot them in one graph
+plot.zoo(underlyingsDF,
+         plot.type = "single",
+         col = c(1, 2, 3, 4, 5, 6, 7, 8, 9))
+legend(julian(legend = names(underlyingsDF)))
+
+# plot BTC
+plot(underlyingsDF$`BTC-USD`)
+
+# create log returns of our underlyings
+underlyingsLogReturns <- diff(log(underlyingsDF))
+
+# plot log returns
+plot.zoo(underlyingsLogReturns)
