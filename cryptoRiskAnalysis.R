@@ -83,11 +83,37 @@ plot.zoo(underlyingsDF,
          col = c(1, 2, 3, 4, 5, 6, 7, 8, 9))
 legend(julian(legend = names(underlyingsDF)))
 
-# plot BTC
-plot(underlyingsDF$`BTC-USD`)
-
 # create log returns of our underlyings
 underlyingsLogReturns <- diff(log(underlyingsDF))
 
+# lets make a df of weekly log returns
+underlyingsWeeklyLogReturns <- apply.weekly(underlyingsLogReturns, 
+                                             colSums)
+
+# lets make a df of monthly log returns
+underlyingsMonthlyLogReturns <- apply.monthly(underlyingsLogReturns, 
+                                             colSums)
+
+# lets make a df of quarterly log returns
+underlyingsQuarterlyLogReturns <- apply.quarterly(underlyingsLogReturns, 
+                                             colSums)
+
 # plot log returns
 plot.zoo(underlyingsLogReturns)
+
+# same but with vertical bars
+plot.zoo(underlyingsLogReturns, type = "h")
+
+# plot our weekly log returns
+plot.zoo(underlyingsWeeklyLogReturns, type = "h")
+
+# plot our monthly log returns
+plot.zoo(underlyingsMonthlyLogReturns, type = "h")
+
+# plot our quarterly log returns
+plot.zoo(underlyingsQuarterlyLogReturns, type = "h")
+
+pairs(underlyingsLogReturns)
+pairs(underlyingsWeeklyLogReturns)
+pairs(underlyingsMonthlyLogReturns)
+pairs(underlyingsQuarterlyLogReturns)
