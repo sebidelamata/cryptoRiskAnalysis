@@ -4,6 +4,7 @@ library(quantmod)
 library(zoo)
 library(tidyr)
 library(xts)
+library(moments)
 
 # list out the underlyings we want to compare
 underlyingsList <- c("SPY", 
@@ -117,3 +118,44 @@ pairs(underlyingsLogReturns)
 pairs(underlyingsWeeklyLogReturns)
 pairs(underlyingsMonthlyLogReturns)
 pairs(underlyingsQuarterlyLogReturns)
+
+# find mean daily log return for btc
+mu <- mean(underlyingsLogReturns$`BTC-USD`)
+
+# standard deviation of btc daily log returns
+sigma <- sd(underlyingsLogReturns$`BTC-USD`)
+
+# plot a histogram of the daily log returns of btv
+hist(underlyingsLogReturns$`BTC-USD`, 
+     nclass = 20,
+     probability = TRUE)
+
+lines(underlyingsLogReturns$`BTC-USD`,
+      dnorm(underlyingsLogReturns$`BTC-USD`,
+            mean = mu, 
+            sd = sigma),
+      col = "red")
+
+# kernel density estimate
+plot(density(underlyingsLogReturns$`BTC-USD`))
+
+# still having pproblems with these lines calls
+lines(underlyingsLogReturns$`BTC-USD`,
+      dnorm(underlyingsLogReturns$`BTC-USD`,
+            mean = mu, 
+            sd = sigma),
+      col = "red")
+
+# q-q plot of BTC log returns against a normal distribution
+qqnorm(underlyingsMonthlyLogReturns$`BTC-USD`)
+qqline(underlyingsLogReturns$`BTC-USD`, 
+       col = "red")
+
+# calculate skewness of btc log returns
+skewness(underlyingsLogReturns$`BTC-USD`)
+
+# kurtosis of btc log returns
+kurtosis(underlyingsLogReturns$`BTC-USD`)
+
+# jarque bera test for normality
+jarque.test(as.vector(underlyingsLogReturns$`BTC-USD`))
