@@ -159,3 +159,5 @@ kurtosis(underlyingsLogReturns$`BTC-USD`)
 
 # jarque bera test for normality
 jarque.test(as.vector(underlyingsLogReturns$`BTC-USD`))
+
+# estimat
