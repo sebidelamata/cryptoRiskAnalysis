@@ -5,17 +5,18 @@ library(zoo)
 library(tidyr)
 library(xts)
 library(moments)
+library(MASS)
+library(QRM)
 
 # list out the underlyings we want to compare
 underlyingsList <- c("SPY", 
-                     "IWM", 
-                     "IJS", 
                      "BTC-USD", 
                      "ETH-USD",
+                     "DOGE-USD",
                      "GLD",
                      "SLV",
-                     "DX-Y.NYB",
-                     "TLT")
+                     "DX-Y.NYB"
+                     )
 
 # define our start date for our series
 startDate <- Sys.Date() - 365 * 10
@@ -48,14 +49,14 @@ for (tickerIndex in seq(length(underlyingsList))){
                          "Symbol")
   tickerSeries <- tickerSeries[c("Date", 
                                  "Symbol",
-                                 "Close")]
+                                 "Adjusted")]
   underlyingsDF <- rbind(underlyingsDF, tickerSeries)
 }
 
 # now let's transpose the data
 underlyingsDF <- spread(underlyingsDF, 
                         Symbol,
-                        Close)
+                        Adjusted)
 
 
 # make Date a date
@@ -134,7 +135,8 @@ lines(underlyingsLogReturns$`BTC-USD`,
       dnorm(underlyingsLogReturns$`BTC-USD`,
             mean = mu, 
             sd = sigma),
-      col = "red")
+      col = "red", 
+      type = "p")
 
 # kernel density estimate
 plot(density(underlyingsLogReturns$`BTC-USD`))
@@ -144,7 +146,8 @@ lines(underlyingsLogReturns$`BTC-USD`,
       dnorm(underlyingsLogReturns$`BTC-USD`,
             mean = mu, 
             sd = sigma),
-      col = "red")
+      col = "red",
+      type = "p")
 
 # q-q plot of BTC log returns against a normal distribution
 qqnorm(underlyingsMonthlyLogReturns$`BTC-USD`)
@@ -160,4 +163,56 @@ kurtosis(underlyingsLogReturns$`BTC-USD`)
 # jarque bera test for normality
 jarque.test(as.vector(underlyingsLogReturns$`BTC-USD`))
 
-# estimat
+# we can apply the skewness and kurtosis of 
+# the distribution of the log returns to each
+# underlying and plot a comparison
+skewScores <- apply(underlyingsLogReturns, 
+                    2, 
+                    skewness)
+kurtosisScores <- apply(underlyingsLogReturns, 
+                        2 ,
+                        kurtosis)
+
+# and now to plot them
+plot(skewScores, 
+     kurtosisScores, 
+     type = "n")
+text(skewScores, 
+     kurtosisScores, 
+     names(skewScores), 
+     cex = 0.6,
+     col = c(1, 2, 3, 4, 5, 6, 7, 8, 9))
+
+# calculate the p-value for jarque bera test for normality
+# for each underlying in daily weekly and monthly log returns
+apply(underlyingsLogReturns, 2, function(v){jarque.test(v)$p.value})
+apply(underlyingsWeeklyLogReturns, 2, function(v){jarque.test(v)$p.value})
+apply(underlyingsMonthlyLogReturns, 2, function(v){jarque.test(v)$p.value})
+apply(underlyingsQuarterlyLogReturns, 2, function(v){jarque.test(v)$p.value})
+
+# let's create a student's-T distribution instead
+# first we fit it to the data
+tfit <- fit.st(underlyingsLogReturns$`BTC-USD`)
+
+# now we can use this fit to determine mean and sd
+tpars <- tfit$par.ests
+nu <- tpars[1]
+mu <- tpars[2]
+sigma <- tpars[3]
+
+# Plot a histogram of our log returns again
+hist(underlyingsLogReturns$`BTC-USD`, 
+     nclass = 20, 
+     probability = TRUE,
+     ylim = range(0, 18))
+
+# Compute the fitted t density based 
+# on the metrics obtained by our fit
+yvals <- dt((underlyingsLogReturns$`BTC-USD` - mu)/sigma, df = nu)/sigma
+
+# Superimpose a red line to show the fitted t density
+lines(underlyingsLogReturns$`BTC-USD`, 
+      yvals, 
+      col = "red",
+      type = "p")
+
