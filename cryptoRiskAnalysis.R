@@ -8,11 +8,14 @@ library(moments)
 library(MASS)
 library(QRM)
 
+
 # list out the underlyings we want to compare
 underlyingsList <- c("SPY", 
                      "BTC-USD", 
                      "ETH-USD",
+                     "BNB-USD",
                      "DOGE-USD",
+                     "XRP-USD",
                      "GLD",
                      "SLV",
                      "DX-Y.NYB"
@@ -216,3 +219,36 @@ lines(underlyingsLogReturns$`BTC-USD`,
       col = "red",
       type = "p")
 
+# alright now we are going to look at the acf of the underlyings
+# first we set the plot so we get two columns and the number of rows
+# as there are underlyings we want to look at
+par(mfrow = c(ncol(underlyingsLogReturns) / 3, 3))
+
+# now we plot the acfs
+for (colName in names(underlyingsLogReturns)){
+  acf(
+    underlyingsLogReturns[, colName], 
+    na.action = na.pass, 
+    main = paste(colName, "ACF")
+    )
+}
+
+# now let's do this for absolute values
+par(mfrow = c(ncol(underlyingsLogReturns) / 3, 3))
+for (colName in names(underlyingsLogReturns)){
+  acf(
+    abs(underlyingsLogReturns[, colName]), 
+    na.action = na.pass, 
+    main = paste(colName, "Absolute Values ACF")
+  )
+}
+
+# now let's do this for squared values
+par(mfrow = c(ncol(underlyingsLogReturns) / 3, 3))
+for (colName in names(underlyingsLogReturns)){
+  acf(
+    underlyingsLogReturns[, colName] ^ 2, 
+    na.action = na.pass, 
+    main = paste(colName, "Squared Values ACF")
+  )
+}
