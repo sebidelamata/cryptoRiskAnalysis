@@ -420,7 +420,29 @@ dailyLogReturnBoxplots <- dailyLogReturnBoxplots %>%
   )
 
 
+# let's make a way to look at our underlyings against market (SPY) beta
+portfolioBeta <- plot_ly(
+  data = underlyingsLogReturns,
+  x = ~SPY,
+  y = ~`BTC-USD`,
+  type = "scatter",
+  mode = "markers"
+  )
 
+# let's make a regression line for our beta coefficient
+portfolioBetaFit <- lm(
+  `BTC-USD` ~ SPY,
+  data = underlyingsLogReturns
+  )
+
+# now we can add the regression line to the graph
+portfolioBeta <- portfolioBeta %>%
+  add_lines(
+    x = ~SPY,
+    y = fitted(
+      portfolioBetaFit
+    )
+  )
 
 
 ################################
@@ -449,6 +471,10 @@ app$layout(
       dccGraph(
         figure = dailyLogReturnBoxplots,
         id = "dailyLogReturnBoxplots"
+      ),
+      dccGraph(
+        figure = portfolioBeta,
+        id = "portfolioBeta"
       )
     )
   )
