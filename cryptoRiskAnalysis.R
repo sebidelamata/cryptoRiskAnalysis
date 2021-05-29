@@ -436,12 +436,36 @@ portfolioBetaFit <- lm(
   )
 
 # now we can add the regression line to the graph
+# the second part adds the coefficient of the line
 portfolioBeta <- portfolioBeta %>%
   add_lines(
     x = ~SPY,
     y = fitted(
       portfolioBetaFit
     )
+  )
+
+# new annotations
+annotations <- list(
+  x = 0.2,
+  y = 0.5,
+  text = paste(
+    "Market Beta of\n", 
+    round(
+      portfolioBetaFit$coefficients[2],
+      2
+      ),
+    ""
+  ),
+  showarrow = FALSE,
+  xref = "paper",
+  yref = "paper"
+)
+
+# now lets add the annotation
+portfolioBeta <- portfolioBeta %>%
+  layout(
+    annotations = annotations
   )
 
 
