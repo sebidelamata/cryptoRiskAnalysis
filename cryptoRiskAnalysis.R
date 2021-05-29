@@ -291,19 +291,9 @@ chartType <- list(
     list(
       method = "restyle",
       args = list(
-        list(
           "type",
           "histogram"
-        ),
-        list(
-          "opacity",
-          0.3
-        ),
-        list(
-          "nbinsy",
-          20
-        )
-      ),
+          ),
       label = "Histogram"
     )
       )
