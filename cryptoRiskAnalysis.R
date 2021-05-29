@@ -42,11 +42,9 @@ underlyingsList <- c(
   "SPY", 
   "BTC-USD",
   "ETH-USD",
-  "BNB-USD",
   "DOGE-USD",
   "XRP-USD",
   "GLD",
-  "SLV",
   "DX-Y.NYB"
   )
 
@@ -240,12 +238,6 @@ adjReturnsTimeSeries <- plot_ly(
   )
 adjReturnsTimeSeries <- adjReturnsTimeSeries %>%
   add_trace(
-    y = ~`BNB-USD`,
-    name = "Binance Coin",
-    mode = "lines+markers"
-  )
-adjReturnsTimeSeries <- adjReturnsTimeSeries %>%
-  add_trace(
     y = ~`DOGE-USD`,
     name = "Dogecoin",
     mode = "lines+markers"
@@ -288,12 +280,6 @@ dailyLogReturnTimeSeries <- plot_ly(
 )
 dailyLogReturnTimeSeries <- dailyLogReturnTimeSeries %>%
   add_trace(
-    y = ~`BNB-USD`,
-    name = "Binance Coin",
-    mode = "lines+markers"
-  )
-dailyLogReturnTimeSeries <- dailyLogReturnTimeSeries %>%
-  add_trace(
     y = ~`DOGE-USD`,
     name = "Dogecoin",
     mode = "lines+markers"
@@ -331,11 +317,6 @@ dailyLogReturnBoxplots <- plot_ly(
   name = "Bitcoin",
   type = "box"
 )
-dailyLogReturnBoxplots <- dailyLogReturnBoxplots %>%
-  add_trace(
-    y = ~`BNB-USD`,
-    name = "Binance Coin"
-  )
 dailyLogReturnBoxplots <- dailyLogReturnBoxplots %>%
   add_trace(
     y = ~`DOGE-USD`,
