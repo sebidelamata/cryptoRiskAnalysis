@@ -237,40 +237,166 @@ adjReturnsTimeSeries <- plot_ly(
   name = "Bitcoin",
   type = "scatter",
   mode = 'lines+markers'
-  )
-adjReturnsTimeSeries <- adjReturnsTimeSeries %>%
+  ) %>%
   add_trace(
     y = ~`DOGE-USD`,
     name = "Dogecoin",
     mode = "lines+markers"
-  )
-adjReturnsTimeSeries <- adjReturnsTimeSeries %>%
+  ) %>%
   add_trace(
     y = ~`ETH-USD`,
     name = "Ethereum",
     mode = "lines+markers"
-  )
-adjReturnsTimeSeries <- adjReturnsTimeSeries %>%
+  ) %>%
   add_trace(
     y = ~`XRP-USD`,
     name = "XRP",
     mode = "lines+markers"
-  )
-adjReturnsTimeSeries <- adjReturnsTimeSeries %>%
+  ) %>%
   add_trace(
     y = ~SPY,
     name = "S&P 500",
     mode = "lines+markers"
-  )
-adjReturnsTimeSeries <- adjReturnsTimeSeries %>%
+  ) %>%
   add_trace(
     y = ~GLD,
     name = "GLD",
     mode = "lines+markers"
   )
 
+# updatemenus component
+updatemenus <- list(
+  list(
+    active = TRUE,
+    type= 'dropdown',
+    buttons = list(
+      list(
+        label = "Bitcoin",
+        method = "update",
+        args = list(
+          list(
+            visible = c(
+              TRUE,
+              FALSE,
+              FALSE,
+              FALSE,
+              FALSE,
+              FALSE
+            )
+          ),
+          list(
+            title = "Bitcoin Adjusted Closing Price"
+          )
+        )
+      ),
+      list(
+        label = "Dogecoin",
+        method = "update",
+        args = list(
+          list(
+            visible = c(
+              FALSE, 
+              TRUE,
+              FALSE,
+              FALSE,
+              FALSE,
+              FALSE
+            )
+          ),
+          list(
+            title = "Dogecoin Adjusted Closing Price"
+          )
+        )
+      ),
+      list(
+        label = "Ethereum",
+        method = "update",
+        args = list(
+          list(
+            visible = c(
+              FALSE, 
+              FALSE,
+              TRUE,
+              FALSE,
+              FALSE,
+              FALSE
+            )
+          ),
+          list(
+            title = "Ethereum Adjusted Closing Price"
+          )
+        ) 
+      ),
+      list(
+        label = "XRP",
+        method = "update",
+        args = list(
+          list(
+            visible = c(
+              FALSE, 
+              FALSE,
+              FALSE,
+              TRUE,
+              FALSE,
+              FALSE
+            )
+          ),
+          list(
+            title = "XRP Adjusted Closing Price"
+          )
+        )
+      ),
+      list(
+        label = "S&P 500",
+        method = "update",
+        args = list(
+          list(
+            visible = c(
+              FALSE, 
+              FALSE,
+              FALSE,
+              FALSE,
+              TRUE,
+              FALSE
+            )
+          ),
+          list(
+            title = "S&P 500 Adjusted Closing Price"
+          )
+        ) 
+      ),
+      list(
+        label = "GLD",
+        method = "update",
+        args = list(
+          list(
+            visible = c(
+              FALSE, 
+              FALSE,
+              FALSE,
+              FALSE,
+              FALSE,
+              TRUE
+            )
+          ),
+          list(
+            title = "GLD Adjusted Closing Price"
+          )
+        ) 
+      )
+    )
+  )
+)
 
-# TODO: create a button to switch granularity
+
+# now lets add the annotation
+adjReturnsTimeSeries <- adjReturnsTimeSeries %>%
+  layout(
+    updatemenus = updatemenus,
+    showlegend = FALSE
+  )
+
+
 # time series plot of daily log returns
 dailyLogReturnTimeSeries <- plot_ly(
   data = underlyingsLogReturns,
@@ -728,77 +854,104 @@ portfolioBeta <- portfolioBeta %>%
 
 
 
-
+# let's initialize our application
 app <- Dash$new()
+
+# this is where we layout the look of the application
 app$layout(
   htmlDiv(
     list(
+      htmlH1("HODL-dar"),
+      htmlH2("Cryptocurrency Risk Analysis Tool"),
+      htmlBr(),
+      htmlBr(),
+      htmlH3("Adjusted Closing Price"),
       dccGraph(
         figure = adjReturnsTimeSeries,
         id = "adjReturnsTimeSeries"
         ),
-      dccTabs(id = "tabs", children=list(
-        dccTab(label='D', children=list(
-          htmlDiv(
-            list(
-              dccGraph(
-              figure = dailyLogReturnTimeSeries,
-              id = "dailyLogReturnTimeSeries"
+      htmlBr(),
+      htmlBr(),
+      htmlH3("Log Returns"),
+      dccTabs(id = "tabs", 
+              children=list(
+                dccTab(
+                  label='D', 
+                  children=list(
+                    htmlDiv(
+                      list(
+                        dccGraph(
+                          figure = dailyLogReturnTimeSeries,
+                          id = "dailyLogReturnTimeSeries"
+                          )
+                        )
+                      )
+                    )
+                  ),
+        dccTab(
+          label='W', 
+          children=list(
+            htmlDiv(
+              list(
+                dccGraph(
+                  figure = weeklyLogReturnTimeSeries,
+                  id = "weeklyLogReturnTimeSeries"
+                  )
+                )
               )
             )
-            )
-          )
           ),
-        dccTab(label='W', children=list(
-          htmlDiv(
-            list(
-              dccGraph(
-                figure = weeklyLogReturnTimeSeries,
-                id = "weeklyLogReturnTimeSeries"
+        dccTab(
+          label='M', 
+          children=list(
+            htmlDiv(
+              list(
+                dccGraph(
+                  figure = monthlyLogReturnTimeSeries,
+                  id = "monthlyLogReturnTimeSeries"
+                  )
+                )
+              )
+            )
+          ),
+        dccTab(
+          label='Q', 
+          children=list(
+            htmlDiv(
+              list(
+                dccGraph(
+                  figure = quarterlyLogReturnTimeSeries,
+                  id = "quarterlyLogReturnTimeSeries"
+                  )
+                )
+              )
+            )
+          ),
+        dccTab(
+          label='Y', 
+          children=list(
+            htmlDiv(
+              list(
+                dccGraph(
+                  figure = annualLogReturnTimeSeries,
+                  id = "annualLogReturnTimeSeries"
+                  )
+                )
               )
             )
           )
         )
         ),
-        dccTab(label='M', children=list(
-          htmlDiv(
-            list(
-              dccGraph(
-                figure = monthlyLogReturnTimeSeries,
-                id = "monthlyLogReturnTimeSeries"
-              )
-            )
-          )
-        )
-        ),
-        dccTab(label='Q', children=list(
-          htmlDiv(
-            list(
-              dccGraph(
-                figure = quarterlyLogReturnTimeSeries,
-                id = "quarterlyLogReturnTimeSeries"
-              )
-            )
-          )
-        )
-        ),
-        dccTab(label='Y', children=list(
-          htmlDiv(
-            list(
-              dccGraph(
-                figure = annualLogReturnTimeSeries,
-                id = "annualLogReturnTimeSeries"
-              )
-            )
-          )
-        )
-        )
-      )
-      ),
+      htmlBr(),
+      htmlBr(),
+      htmlH3("Distribution of Log Returns"),
       dccGraph(
         figure = dailyLogReturnBoxplots,
         id = "dailyLogReturnBoxplots"
       ),
+      htmlBr(),
+      htmlBr(),
+      htmlH3("Market Risk Factor"),
       dccGraph(
         figure = portfolioBeta,
         id = "portfolioBeta"
@@ -808,6 +961,5 @@ app$layout(
 )
 
 app$run_server(
-  debug=TRUE, 
   dev_tools_hot_reload=FALSE
   )
