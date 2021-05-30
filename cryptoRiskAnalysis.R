@@ -285,7 +285,7 @@ updatemenus <- list(
             )
           ),
           list(
-            title = "Bitcoin Adjusted Closing Price"
+            title = "BTC Bitcoin"
           )
         )
       ),
@@ -304,7 +304,7 @@ updatemenus <- list(
             )
           ),
           list(
-            title = "Dogecoin Adjusted Closing Price"
+            title = "DOGE Dogecoin"
           )
         )
       ),
@@ -323,7 +323,7 @@ updatemenus <- list(
             )
           ),
           list(
-            title = "Ethereum Adjusted Closing Price"
+            title = "ETH Ethereum"
           )
         ) 
       ),
@@ -342,7 +342,7 @@ updatemenus <- list(
             )
           ),
           list(
-            title = "XRP Adjusted Closing Price"
+            title = "XRP Ripple"
           )
         )
       ),
@@ -361,7 +361,7 @@ updatemenus <- list(
             )
           ),
           list(
-            title = "S&P 500 Adjusted Closing Price"
+            title = "SPY S&P 500 ETF"
           )
         ) 
       ),
@@ -380,7 +380,7 @@ updatemenus <- list(
             )
           ),
           list(
-            title = "GLD Adjusted Closing Price"
+            title = "GLD SPDR Gold Shares ETF"
           )
         ) 
       )
@@ -578,63 +578,6 @@ dailyLogReturnBoxplots <- dailyLogReturnBoxplots %>%
   add_trace(
     y = ~GLD,
     name = "GLD"
-  )
-
-# now let's apply some changes to the plot so the user
-# can switch between a box plot and histogram view of distributions
-
-# first let's build our buttons
-chartType <- list(
-  type = "buttons",
-  direction = "right",
-  xanchor = "center",
-  yanchor = "top",
-  pad = list(
-    "r" = 0,
-    "t" = 0,
-    "b" = 0
-  ),
-  x = 0.5,
-  y = 1.27,
-  buttons = list(
-    list(
-      method = "restyle",
-      args = list(
-        "type",
-        "box"
-      ),
-      label = "Boxplot"
-    ),
-    list(
-      method = "restyle",
-      args = list(
-          "type",
-          "histogram"
-          ),
-      label = "Histogram"
-    )
-      )
-    )
-  
-
-
-# this is what the buttons are will say
-annotations <- list(
-  text = "Chart<br>Type", 
-  x = 0.2,
-  y = 1.25,
-  xref = "paper",
-  yref = "paper",
-  showarrow = FALSE
-)
-
-# here is where we apply the changes to the layout of the graph
-dailyLogReturnBoxplots <- dailyLogReturnBoxplots %>%
-  layout(
-    updatemenus = list(
-      chartType
-    ),
-    annotations = annotations
   )
 
 
@@ -855,7 +798,10 @@ portfolioBeta <- portfolioBeta %>%
 
 
 # let's initialize our application
-app <- Dash$new()
+# we can declare our external CSS stylesheet here
+app <- Dash$new(
+  external_stylesheets = "https://codepen.io/chriddyp/pen/bWLwgP.css"
+)
 
 # this is where we layout the look of the application
 app$layout(
@@ -872,7 +818,7 @@ app$layout(
         ),
       htmlBr(),
       htmlBr(),
-      htmlH3("Log Returns"),
+      htmlH3("Aggregated Log Returns"),
       dccTabs(id = "tabs", 
               children=list(
                 dccTab(
