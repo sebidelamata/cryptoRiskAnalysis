@@ -389,11 +389,16 @@ updatemenus <- list(
 )
 
 
-# now lets add the annotation
+# now lets add the annotation button and stylings and shit
 adjReturnsTimeSeries <- adjReturnsTimeSeries %>%
   layout(
     updatemenus = updatemenus,
-    showlegend = FALSE
+    showlegend = FALSE,
+    plot_bgcolor = colors$background,
+    paper_bgcolor = colors$background,
+    font = list(
+      color = colors$text
+    )
   )
 
 
@@ -424,6 +429,13 @@ dailyLogReturnTimeSeries <- plot_ly(
   add_trace(
     y = ~GLD,
     name = "GLD"
+  ) %>%
+  layout(
+    plot_bgcolor = colors$background,
+    paper_bgcolor = colors$background,
+    font = list(
+      color = colors$text
+    )
   )
 
 
@@ -454,6 +466,13 @@ weeklyLogReturnTimeSeries <- plot_ly(
   add_trace(
     y = ~GLD,
     name = "GLD"
+  ) %>%
+  layout(
+    plot_bgcolor = colors$background,
+    paper_bgcolor = colors$background,
+    font = list(
+      color = colors$text
+    )
   )
 
 
@@ -484,6 +503,13 @@ monthlyLogReturnTimeSeries <- plot_ly(
   add_trace(
     y = ~GLD,
     name = "GLD"
+  ) %>%
+  layout(
+    plot_bgcolor = colors$background,
+    paper_bgcolor = colors$background,
+    font = list(
+      color = colors$text
+    )
   )
 
 
@@ -514,6 +540,13 @@ quarterlyLogReturnTimeSeries <- plot_ly(
   add_trace(
     y = ~GLD,
     name = "GLD"
+  ) %>%
+  layout(
+    plot_bgcolor = colors$background,
+    paper_bgcolor = colors$background,
+    font = list(
+      color = colors$text
+    )
   )
 
 
@@ -544,6 +577,13 @@ annualLogReturnTimeSeries <- plot_ly(
   add_trace(
     y = ~GLD,
     name = "GLD"
+  ) %>%
+  layout(
+    plot_bgcolor = colors$background,
+    paper_bgcolor = colors$background,
+    font = list(
+      color = colors$text
+    )
   )
 
 
@@ -553,31 +593,33 @@ dailyLogReturnBoxplots <- plot_ly(
   y = ~`BTC-USD`,
   name = "Bitcoin",
   type = "box"
-)
-dailyLogReturnBoxplots <- dailyLogReturnBoxplots %>%
+) %>%
   add_trace(
     y = ~`DOGE-USD`,
     name = "Dogecoin"
-  )
-dailyLogReturnBoxplots <- dailyLogReturnBoxplots %>%
+  ) %>%
   add_trace(
     y = ~`ETH-USD`,
     name = "Ethereum"
-  )
-dailyLogReturnBoxplots <- dailyLogReturnBoxplots %>%
+  ) %>%
   add_trace(
     y = ~`XRP-USD`,
     name = "XRP"
-  )
-dailyLogReturnBoxplots <- dailyLogReturnBoxplots %>%
+  ) %>%
   add_trace(
     y = ~SPY,
     name = "S&P 500"
-  )
-dailyLogReturnBoxplots <- dailyLogReturnBoxplots %>%
+  ) %>%
   add_trace(
     y = ~GLD,
     name = "GLD"
+  ) %>%
+  layout(
+    plot_bgcolor = colors$background,
+    paper_bgcolor = colors$background,
+    font = list(
+      color = colors$text
+    )
   )
 
 
@@ -585,7 +627,14 @@ dailyLogReturnBoxplots <- dailyLogReturnBoxplots %>%
 portfolioBeta <- plot_ly(
   data = underlyingsLogReturns,
   x = ~SPY,
-  type = "scatter"
+  type = "scatter",
+  opacity = 0.65,
+  marker = list(
+    size = 15,
+    line = list(
+      width = 0.5, 
+      color = colors$text)
+    )
   ) %>%
   add_trace(
     y = ~`BTC-USD`,
@@ -634,25 +683,73 @@ portfolioBeta <- portfolioBeta %>%
     y = fitted(
       BTCBetaFit
     ),
-    mode = "lines"
+    mode = "lines",
+    opacity = 1,
+    line = list(
+      color = colors$text, 
+      width = 3
+      ),
+    marker = list(
+      size = 0.1,
+      line = list(
+        width = 0.0001, 
+        color = colors$text
+      )
+    )
   ) %>%
   add_trace(
     y = fitted(
       DogeBetaFit
     ),
-    mode = "lines"
+    mode = "lines",
+    opacity = 1,
+    line = list(
+      color = colors$text, 
+      width = 3
+    ),
+    marker = list(
+      size = 0.1,
+      line = list(
+        width = 0.0001, 
+        color = colors$text
+      )
+    )
   ) %>%
   add_trace(
     y = fitted(
       EthereumBetaFit
     ),
-    mode = "lines"
+    mode = "lines",
+    opacity = 1,
+    line = list(
+      color = colors$text, 
+      width = 3
+    ),
+    marker = list(
+      size = 0.1,
+      line = list(
+        width = 0.0001, 
+        color = colors$text
+      )
+    )
   ) %>%
   add_trace(
     y = fitted(
       XRPBetaFit
     ),
-    mode = "lines"
+    mode = "lines",
+    opacity = 1,
+    line = list(
+      color = colors$text, 
+      width = 3
+    ),
+    marker = list(
+      size = 0.1,
+      line = list(
+        width = 0.0001, 
+        color = colors$text
+      )
+    )
   )
 
 # updatemenus component
@@ -782,7 +879,12 @@ updatemenus <- list(
 portfolioBeta <- portfolioBeta %>%
   layout(
     updatemenus = updatemenus,
-    showlegend = FALSE
+    showlegend = FALSE,
+    plot_bgcolor = colors$background,
+    paper_bgcolor = colors$background,
+    font = list(
+      color = colors$text
+    )
   )
 
 
@@ -797,6 +899,12 @@ portfolioBeta <- portfolioBeta %>%
 
 
 
+# let's claim the colors we want to use here
+colors <- list(
+  background = '#111111',
+  text = '#7FDBFF'
+)
+
 # let's initialize our application
 # we can declare our external CSS stylesheet here
 app <- Dash$new(
@@ -807,18 +915,42 @@ app <- Dash$new(
 app$layout(
   htmlDiv(
     list(
-      htmlH1("HODL-dar"),
-      htmlH2("Cryptocurrency Risk Analysis Tool"),
+      htmlH1(
+        "HODL-dar",
+        style = list(
+          textAlign = "right",
+          color = colors$text
+        )
+      ),
+      htmlH4(
+        "Cryptocurrency Risk Analysis Tool",
+        style = list(
+          textAlign = "right",
+          color = colors$text
+        )
+      ),
       htmlBr(),
       htmlBr(),
-      htmlH3("Adjusted Closing Price"),
+      htmlH3(
+        "Adjusted Closing Price",
+        style = list(
+          textAlign = "center",
+          color = colors$text
+        )
+      ),
       dccGraph(
         figure = adjReturnsTimeSeries,
         id = "adjReturnsTimeSeries"
         ),
       htmlBr(),
       htmlBr(),
-      htmlH3("Aggregated Log Returns"),
+      htmlH3(
+        "Aggregated Log Returns",
+        style = list(
+          textAlign = "center",
+          color = colors$text
+        )
+      ),
       dccTabs(id = "tabs", 
               children=list(
                 dccTab(
@@ -890,19 +1022,34 @@ app$layout(
         ),
       htmlBr(),
       htmlBr(),
-      htmlH3("Distribution of Log Returns"),
+      htmlH3(
+        "Distribution of Log Returns",
+        style = list(
+          textAlign = "center",
+          color = colors$text
+        )
+      ),
       dccGraph(
         figure = dailyLogReturnBoxplots,
         id = "dailyLogReturnBoxplots"
       ),
       htmlBr(),
       htmlBr(),
-      htmlH3("Market Risk Factor"),
+      htmlH3(
+        "Market Risk Factor",
+        style = list(
+          textAlign = "center",
+          color = colors$text
+        )
+      ),
       dccGraph(
         figure = portfolioBeta,
         id = "portfolioBeta"
       )
-    )
+    ),
+    style = list(
+      backgroundColor = colors$background
+      )
   )
 )
 
