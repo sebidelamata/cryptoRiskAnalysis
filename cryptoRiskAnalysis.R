@@ -30,11 +30,13 @@ library(dashCoreComponents)
 library(dashHtmlComponents)
 
 
+
 #################################
 #################################
 ## Importing and cleaning Data ##
 #################################
 #################################
+
 
 
 # list out the underlyings we want to compare
@@ -263,7 +265,7 @@ adjReturnsTimeSeries <- adjReturnsTimeSeries %>%
 adjReturnsTimeSeries <- adjReturnsTimeSeries %>%
   add_trace(
     y = ~GLD,
-    name = "Gold Spot Price",
+    name = "GLD",
     mode = "lines+markers"
   )
 
@@ -271,42 +273,151 @@ adjReturnsTimeSeries <- adjReturnsTimeSeries %>%
 # TODO: create a button to switch granularity
 # time series plot of daily log returns
 dailyLogReturnTimeSeries <- plot_ly(
+  data = underlyingsLogReturns,
+  x = ~Date, 
+  y = ~`BTC-USD`,
+  name = "Bitcoin",
+  type = "bar"
+) %>%
+  add_trace(
+    y = ~`DOGE-USD`,
+    name = "Dogecoin"
+  ) %>%
+  add_trace(
+    y = ~`ETH-USD`,
+    name = "Ethereum"
+  ) %>%
+  add_trace(
+    y = ~`XRP-USD`,
+    name = "XRP"
+  ) %>%
+  add_trace(
+    y = ~SPY,
+    name = "S&P 500"
+  ) %>%
+  add_trace(
+    y = ~GLD,
+    name = "GLD"
+  )
+
+
+# time series plot of weekly log returns
+weeklyLogReturnTimeSeries <- plot_ly(
+  data = weeklyLogReturns,
+  x = ~Date, 
+  y = ~`BTC-USD`,
+  name = "Bitcoin",
+  type = "bar"
+) %>%
+  add_trace(
+    y = ~`DOGE-USD`,
+    name = "Dogecoin"
+  ) %>%
+  add_trace(
+    y = ~`ETH-USD`,
+    name = "Ethereum"
+  ) %>%
+  add_trace(
+    y = ~`XRP-USD`,
+    name = "XRP"
+  ) %>%
+  add_trace(
+    y = ~SPY,
+    name = "S&P 500"
+  ) %>%
+  add_trace(
+    y = ~GLD,
+    name = "GLD"
+  )
+
+
+# time series plot of monthly log returns
+monthlyLogReturnTimeSeries <- plot_ly(
+  data = monthlyLogReturns,
+  x = ~Date, 
+  y = ~`BTC-USD`,
+  name = "Bitcoin",
+  type = "bar"
+) %>%
+  add_trace(
+    y = ~`DOGE-USD`,
+    name = "Dogecoin"
+  ) %>%
+  add_trace(
+    y = ~`ETH-USD`,
+    name = "Ethereum"
+  ) %>%
+  add_trace(
+    y = ~`XRP-USD`,
+    name = "XRP"
+  ) %>%
+  add_trace(
+    y = ~SPY,
+    name = "S&P 500"
+  ) %>%
+  add_trace(
+    y = ~GLD,
+    name = "GLD"
+  )
+
+
+# time series plot of quarterly log returns
+quarterlyLogReturnTimeSeries <- plot_ly(
   data = quarterlyLogReturns,
   x = ~Date, 
   y = ~`BTC-USD`,
   name = "Bitcoin",
-  type = "scatter",
-  mode = 'lines+markers'
-)
-dailyLogReturnTimeSeries <- dailyLogReturnTimeSeries %>%
+  type = "bar"
+) %>%
   add_trace(
     y = ~`DOGE-USD`,
-    name = "Dogecoin",
-    mode = "lines+markers"
-  )
-dailyLogReturnTimeSeries <- dailyLogReturnTimeSeries %>%
+    name = "Dogecoin"
+  ) %>%
   add_trace(
     y = ~`ETH-USD`,
-    name = "Ethereum",
-    mode = "lines+markers"
-  )
-dailyLogReturnTimeSeries <- dailyLogReturnTimeSeries %>%
+    name = "Ethereum"
+  ) %>%
   add_trace(
     y = ~`XRP-USD`,
-    name = "XRP",
-    mode = "lines+markers"
-  )
-dailyLogReturnTimeSeries <- dailyLogReturnTimeSeries %>%
+    name = "XRP"
+  ) %>%
   add_trace(
     y = ~SPY,
-    name = "S&P 500",
-    mode = "lines+markers"
-  )
-dailyLogReturnTimeSeries <- dailyLogReturnTimeSeries %>%
+    name = "S&P 500"
+  ) %>%
   add_trace(
     y = ~GLD,
-    name = "Gold Spot Price",
-    mode = "lines+markers"
+    name = "GLD"
+  )
+
+
+# time series plot of annual log returns
+annualLogReturnTimeSeries <- plot_ly(
+  data = annualLogReturns,
+  x = ~Date, 
+  y = ~`BTC-USD`,
+  name = "Bitcoin",
+  type = "bar"
+) %>%
+  add_trace(
+    y = ~`DOGE-USD`,
+    name = "Dogecoin"
+  ) %>%
+  add_trace(
+    y = ~`ETH-USD`,
+    name = "Ethereum"
+  ) %>%
+  add_trace(
+    y = ~`XRP-USD`,
+    name = "XRP"
+  ) %>%
+  add_trace(
+    y = ~SPY,
+    name = "S&P 500"
+  ) %>%
+  add_trace(
+    y = ~GLD,
+    name = "GLD"
   )
 
 
@@ -340,7 +451,7 @@ dailyLogReturnBoxplots <- dailyLogReturnBoxplots %>%
 dailyLogReturnBoxplots <- dailyLogReturnBoxplots %>%
   add_trace(
     y = ~GLD,
-    name = "Gold Spot Price"
+    name = "GLD"
   )
 
 # now let's apply some changes to the plot so the user
@@ -405,48 +516,204 @@ dailyLogReturnBoxplots <- dailyLogReturnBoxplots %>%
 portfolioBeta <- plot_ly(
   data = underlyingsLogReturns,
   x = ~SPY,
-  y = ~`BTC-USD`,
-  type = "scatter",
-  mode = "markers"
+  type = "scatter"
+  ) %>%
+  add_trace(
+    y = ~`BTC-USD`,
+    name = "Bitcoin",
+    mode = "markers"
+  ) %>%
+  add_trace(
+    y = ~`DOGE-USD`,
+    name = "Dogecoin",
+    mode = "markers"
+  ) %>%
+  add_trace(
+    y = ~`ETH-USD`,
+    name = "Ethereum",
+    mode = "markers"
+  ) %>%
+  add_trace(
+    y = ~`XRP-USD`,
+    name = "XRP",
+    mode = "markers"
   )
 
-# let's make a regression line for our beta coefficient
-portfolioBetaFit <- lm(
+
+# let's make a regression line for our beta coefficients
+BTCBetaFit <- lm(
   `BTC-USD` ~ SPY,
   data = underlyingsLogReturns
   )
+DogeBetaFit <- lm(
+  `DOGE-USD` ~ SPY,
+  data = underlyingsLogReturns
+)
+EthereumBetaFit <- lm(
+  `ETH-USD` ~ SPY,
+  data = underlyingsLogReturns
+)
+XRPBetaFit <- lm(
+  `XRP-USD` ~ SPY,
+  data = underlyingsLogReturns
+)
 
 # now we can add the regression line to the graph
 # the second part adds the coefficient of the line
 portfolioBeta <- portfolioBeta %>%
-  add_lines(
-    x = ~SPY,
+  add_trace(
     y = fitted(
-      portfolioBetaFit
-    )
+      BTCBetaFit
+    ),
+    mode = "lines"
+  ) %>%
+  add_trace(
+    y = fitted(
+      DogeBetaFit
+    ),
+    mode = "lines"
+  ) %>%
+  add_trace(
+    y = fitted(
+      EthereumBetaFit
+    ),
+    mode = "lines"
+  ) %>%
+  add_trace(
+    y = fitted(
+      XRPBetaFit
+    ),
+    mode = "lines"
   )
 
-# new annotations
-annotations <- list(
-  x = 0.2,
-  y = 0.5,
-  text = paste(
-    "Market Beta of\n", 
-    round(
-      portfolioBetaFit$coefficients[2],
-      2
+# updatemenus component
+updatemenus <- list(
+  list(
+   active = TRUE,
+    type= 'dropdown',
+    buttons = list(
+      list(
+        label = "Bitcoin",
+        method = "update",
+        args = list(
+          list(
+            visible = c(
+              FALSE,
+              TRUE, 
+              FALSE,
+              FALSE,
+              FALSE,
+              TRUE,
+              FALSE,
+              FALSE,
+              FALSE
+              )
+            ),
+          list(
+            title = paste(
+              "Bitcoin Market Beta of\n", 
+              round(
+                BTCBetaFit$coefficients[2],
+                3
+                )
+              )
+            )
+          )
+        ),
+      list(
+        label = "Dogecoin",
+        method = "update",
+        args = list(
+          list(
+            visible = c(
+              FALSE,
+              FALSE, 
+              TRUE,
+              FALSE,
+              FALSE,
+              FALSE, 
+              TRUE,
+              FALSE,
+              FALSE
+              )
+          ),
+          list(
+            title = paste(
+              "Dogecoin Market Beta of\n", 
+              round(
+                DogeBetaFit$coefficients[2],
+                3
+              )
+            )
+          )
+        )
       ),
-    ""
-  ),
-  showarrow = FALSE,
-  xref = "paper",
-  yref = "paper"
-)
+      list(
+        label = "Ethereum",
+        method = "update",
+        args = list(
+          list(
+            visible = c(
+              FALSE,
+              FALSE, 
+              FALSE,
+              TRUE,
+              FALSE,
+              FALSE, 
+              FALSE,
+              TRUE,
+              FALSE
+              )
+          ),
+          list(
+            title = paste(
+              "Ethereum Market Beta of\n", 
+              round(
+                EthereumBetaFit$coefficients[2],
+                3
+              )
+            )
+          )
+        ) 
+      ),
+      list(
+        label = "XRP",
+        method = "update",
+        args = list(
+          list(
+            visible = c(
+              FALSE,
+              FALSE, 
+              FALSE,
+              FALSE,
+              TRUE,
+              FALSE, 
+              FALSE,
+              FALSE,
+              TRUE
+              )
+          ),
+          list(
+            title = paste(
+              "XRP Market Beta of\n", 
+              round(
+                XRPBetaFit$coefficients[2],
+                3
+              )
+              )
+          )
+        )
+      )
+      )
+    )
+  )
+      
 
 # now lets add the annotation
 portfolioBeta <- portfolioBeta %>%
   layout(
-    annotations = annotations
+    updatemenus = updatemenus,
+    showlegend = FALSE
   )
 
 
@@ -461,6 +728,7 @@ portfolioBeta <- portfolioBeta %>%
 
 
 
+
 app <- Dash$new()
 app$layout(
   htmlDiv(
@@ -469,9 +737,63 @@ app$layout(
         figure = adjReturnsTimeSeries,
         id = "adjReturnsTimeSeries"
         ),
-      dccGraph(
-        figure = dailyLogReturnTimeSeries,
-        id = "dailyLogReturnTimeSeries"
+      dccTabs(id = "tabs", children=list(
+        dccTab(label='D', children=list(
+          htmlDiv(
+            list(
+              dccGraph(
+              figure = dailyLogReturnTimeSeries,
+              id = "dailyLogReturnTimeSeries"
+              )
+            )
+            )
+          )
+          ),
+        dccTab(label='W', children=list(
+          htmlDiv(
+            list(
+              dccGraph(
+                figure = weeklyLogReturnTimeSeries,
+                id = "weeklyLogReturnTimeSeries"
+              )
+            )
+          )
+        )
+        ),
+        dccTab(label='M', children=list(
+          htmlDiv(
+            list(
+              dccGraph(
+                figure = monthlyLogReturnTimeSeries,
+                id = "monthlyLogReturnTimeSeries"
+              )
+            )
+          )
+        )
+        ),
+        dccTab(label='Q', children=list(
+          htmlDiv(
+            list(
+              dccGraph(
+                figure = quarterlyLogReturnTimeSeries,
+                id = "quarterlyLogReturnTimeSeries"
+              )
+            )
+          )
+        )
+        ),
+        dccTab(label='Y', children=list(
+          htmlDiv(
+            list(
+              dccGraph(
+                figure = annualLogReturnTimeSeries,
+                id = "annualLogReturnTimeSeries"
+              )
+            )
+          )
+        )
+        )
+      )
       ),
       dccGraph(
         figure = dailyLogReturnBoxplots,
