@@ -228,178 +228,181 @@ annualLogReturns <- annualLogReturns %>%
 
 
 
+# this and any other commented out graphs have been moved to the callback section 
+# due to having interactive buttons added but I wanted to keep the original here bc
+# it makes more sense to read this way (to me).
 
 # time series plot of prices
-adjReturnsTimeSeries <- plot_ly(
-  data = underlyingsDF,
-  x = ~Date, 
-  y = ~`BTC-USD`,
-  name = "Bitcoin",
-  type = "scatter",
-  mode = 'lines+markers'
-  ) %>%
-  add_trace(
-    y = ~`DOGE-USD`,
-    name = "Dogecoin",
-    mode = "lines+markers"
-  ) %>%
-  add_trace(
-    y = ~`ETH-USD`,
-    name = "Ethereum",
-    mode = "lines+markers"
-  ) %>%
-  add_trace(
-    y = ~`XRP-USD`,
-    name = "XRP",
-    mode = "lines+markers"
-  ) %>%
-  add_trace(
-    y = ~SPY,
-    name = "S&P 500",
-    mode = "lines+markers"
-  ) %>%
-  add_trace(
-    y = ~GLD,
-    name = "GLD",
-    mode = "lines+markers"
-  )
-
-# updatemenus component
-updatemenus <- list(
-  list(
-    active = -1,
-    type= 'dropdown',
-    buttons = list(
-      list(
-        label = "Bitcoin",
-        method = "update",
-        args = list(
-          list(
-            visible = c(
-              TRUE,
-              FALSE,
-              FALSE,
-              FALSE,
-              FALSE,
-              FALSE
-            )
-          ),
-          list(
-            title = "BTC Bitcoin"
-          )
-        )
-      ),
-      list(
-        label = "Dogecoin",
-        method = "update",
-        args = list(
-          list(
-            visible = c(
-              FALSE, 
-              TRUE,
-              FALSE,
-              FALSE,
-              FALSE,
-              FALSE
-            )
-          ),
-          list(
-            title = "DOGE Dogecoin"
-          )
-        )
-      ),
-      list(
-        label = "Ethereum",
-        method = "update",
-        args = list(
-          list(
-            visible = c(
-              FALSE, 
-              FALSE,
-              TRUE,
-              FALSE,
-              FALSE,
-              FALSE
-            )
-          ),
-          list(
-            title = "ETH Ethereum"
-          )
-        ) 
-      ),
-      list(
-        label = "XRP",
-        method = "update",
-        args = list(
-          list(
-            visible = c(
-              FALSE, 
-              FALSE,
-              FALSE,
-              TRUE,
-              FALSE,
-              FALSE
-            )
-          ),
-          list(
-            title = "XRP Ripple"
-          )
-        )
-      ),
-      list(
-        label = "S&P 500",
-        method = "update",
-        args = list(
-          list(
-            visible = c(
-              FALSE, 
-              FALSE,
-              FALSE,
-              FALSE,
-              TRUE,
-              FALSE
-            )
-          ),
-          list(
-            title = "SPY S&P 500 ETF"
-          )
-        ) 
-      ),
-      list(
-        label = "GLD",
-        method = "update",
-        args = list(
-          list(
-            visible = c(
-              FALSE, 
-              FALSE,
-              FALSE,
-              FALSE,
-              FALSE,
-              TRUE
-            )
-          ),
-          list(
-            title = "GLD SPDR Gold Shares ETF"
-          )
-        ) 
-      )
-    )
-  )
-)
-
-
-# now lets add the annotation button and stylings and shit
-adjReturnsTimeSeries <- adjReturnsTimeSeries %>%
-  layout(
-    updatemenus = updatemenus,
-    showlegend = FALSE,
-    plot_bgcolor = colors$background,
-    paper_bgcolor = colors$background,
-    font = list(
-      color = colors$text
-    )
-  )
+# adjReturnsTimeSeries <- plot_ly(
+#   data = underlyingsDF,
+#   x = ~Date, 
+#   y = ~`BTC-USD`,
+#   name = "Bitcoin",
+#   type = "scatter",
+#   mode = 'lines+markers'
+#   ) %>%
+#   add_trace(
+#     y = ~`DOGE-USD`,
+#     name = "Dogecoin",
+#     mode = "lines+markers"
+#   ) %>%
+#   add_trace(
+#     y = ~`ETH-USD`,
+#     name = "Ethereum",
+#     mode = "lines+markers"
+#   ) %>%
+#   add_trace(
+#     y = ~`XRP-USD`,
+#     name = "XRP",
+#     mode = "lines+markers"
+#   ) %>%
+#   add_trace(
+#     y = ~SPY,
+#     name = "S&P 500",
+#     mode = "lines+markers"
+#   ) %>%
+#   add_trace(
+#     y = ~GLD,
+#     name = "GLD",
+#     mode = "lines+markers"
+#   )
+# 
+# # updatemenus component
+# updatemenus <- list(
+#   list(
+#     active = -1,
+#     type= 'dropdown',
+#     buttons = list(
+#       list(
+#         label = "Bitcoin",
+#         method = "update",
+#         args = list(
+#           list(
+#             visible = c(
+#               TRUE,
+#               FALSE,
+#               FALSE,
+#               FALSE,
+#               FALSE,
+#               FALSE
+#             )
+#           ),
+#           list(
+#             title = "BTC Bitcoin"
+#           )
+#         )
+#       ),
+#       list(
+#         label = "Dogecoin",
+#         method = "update",
+#         args = list(
+#           list(
+#             visible = c(
+#               FALSE, 
+#               TRUE,
+#               FALSE,
+#               FALSE,
+#               FALSE,
+#               FALSE
+#             )
+#           ),
+#           list(
+#             title = "DOGE Dogecoin"
+#           )
+#         )
+#       ),
+#       list(
+#         label = "Ethereum",
+#         method = "update",
+#         args = list(
+#           list(
+#             visible = c(
+#               FALSE, 
+#               FALSE,
+#               TRUE,
+#               FALSE,
+#               FALSE,
+#               FALSE
+#             )
+#           ),
+#           list(
+#             title = "ETH Ethereum"
+#           )
+#         ) 
+#       ),
+#       list(
+#         label = "XRP",
+#         method = "update",
+#         args = list(
+#           list(
+#             visible = c(
+#               FALSE, 
+#               FALSE,
+#               FALSE,
+#               TRUE,
+#               FALSE,
+#               FALSE
+#             )
+#           ),
+#           list(
+#             title = "XRP Ripple"
+#           )
+#         )
+#       ),
+#       list(
+#         label = "S&P 500",
+#         method = "update",
+#         args = list(
+#           list(
+#             visible = c(
+#               FALSE, 
+#               FALSE,
+#               FALSE,
+#               FALSE,
+#               TRUE,
+#               FALSE
+#             )
+#           ),
+#           list(
+#             title = "SPY S&P 500 ETF"
+#           )
+#         ) 
+#       ),
+#       list(
+#         label = "GLD",
+#         method = "update",
+#         args = list(
+#           list(
+#             visible = c(
+#               FALSE, 
+#               FALSE,
+#               FALSE,
+#               FALSE,
+#               FALSE,
+#               TRUE
+#             )
+#           ),
+#           list(
+#             title = "GLD SPDR Gold Shares ETF"
+#           )
+#         ) 
+#       )
+#     )
+#   )
+# )
+# 
+# 
+# # now lets add the annotation button and stylings and shit
+# adjReturnsTimeSeries <- adjReturnsTimeSeries %>%
+#   layout(
+#     updatemenus = updatemenus,
+#     showlegend = FALSE,
+#     plot_bgcolor = colors$background,
+#     paper_bgcolor = colors$background,
+#     font = list(
+#       color = colors$text
+#     )
+#   )
 
 
 # time series plot of daily log returns
@@ -888,22 +891,100 @@ portfolioBeta <- portfolioBeta %>%
   )
 
 
-# lets calculate the density of daily btc
+# VaR Graph
+
+# lets calculate the density of btc
 densityBTC <- density(underlyingsLogReturns$`BTC-USD`)
 # now we can calculate VaR to the 90%
-dailyVaRBTC <- qnorm(
+VaRBTC <- qnorm(
   0.95,
   mean = mean(underlyingsLogReturns$`BTC-USD`),
   sd = sd(underlyingsLogReturns$`BTC-USD`)
   )
 # now lets calculate expexted shortfall
-dailyESBTC <- ESnorm(
+ESBTC <- ESnorm(
   0.95,
   mu = mean(underlyingsLogReturns$`BTC-USD`),
   sd = sd(underlyingsLogReturns$`BTC-USD`)
 )
 
+# lets calculate the density of doge
+densityDoge <- density(underlyingsLogReturns$`DOGE-USD`)
+# now we can calculate VaR to the 90%
+VaRDoge <- qnorm(
+  0.95,
+  mean = mean(underlyingsLogReturns$`DOGE-USD`),
+  sd = sd(underlyingsLogReturns$`DOGE-USD`)
+)
+# now lets calculate expexted shortfall
+ESDoge <- ESnorm(
+  0.95,
+  mu = mean(underlyingsLogReturns$`DOGE-USD`),
+  sd = sd(underlyingsLogReturns$`DOGE-USD`)
+)
 
+# lets calculate the density of ethereum
+densityETH <- density(underlyingsLogReturns$`ETH-USD`)
+# now we can calculate VaR to the 90%
+VaRETH <- qnorm(
+  0.95,
+  mean = mean(underlyingsLogReturns$`ETH-USD`),
+  sd = sd(underlyingsLogReturns$`ETH-USD`)
+)
+# now lets calculate expexted shortfall
+ESETH <- ESnorm(
+  0.95,
+  mu = mean(underlyingsLogReturns$`ETH-USD`),
+  sd = sd(underlyingsLogReturns$`ETH-USD`)
+)
+
+# lets calculate the density of xrp
+densityXRP <- density(underlyingsLogReturns$`XRP-USD`)
+# now we can calculate VaR to the 90%
+VaRXRP <- qnorm(
+  0.95,
+  mean = mean(underlyingsLogReturns$`XRP-USD`),
+  sd = sd(underlyingsLogReturns$`XRP-USD`)
+)
+# now lets calculate expexted shortfall
+ESXRP <- ESnorm(
+  0.95,
+  mu = mean(underlyingsLogReturns$SPY),
+  sd = sd(underlyingsLogReturns$SPY)
+)
+
+# lets calculate the density of spy
+densitySPY <- density(underlyingsLogReturns$SPY)
+# now we can calculate VaR to the 90%
+VaRSPY <- qnorm(
+  0.95,
+  mean = mean(underlyingsLogReturns$SPY),
+  sd = sd(underlyingsLogReturns$SPY)
+)
+# now lets calculate expexted shortfall
+ESSPY <- ESnorm(
+  0.95,
+  mu = mean(underlyingsLogReturns$SPY),
+  sd = sd(underlyingsLogReturns$SPY)
+)
+
+# lets calculate the density of gld
+densityGLD <- density(underlyingsLogReturns$GLD)
+# now we can calculate VaR to the 90%
+VaRGLD <- qnorm(
+  0.95,
+  mean = mean(underlyingsLogReturns$GLD),
+  sd = sd(underlyingsLogReturns$GLD)
+)
+# now lets calculate expexted shortfall
+ESGLD <- ESnorm(
+  0.95,
+  mu = mean(underlyingsLogReturns$GLD),
+  sd = sd(underlyingsLogReturns$GLD)
+)
+
+
+# the actual graphing part
 # let's do our daily VaR and cVaR graph
 VaRPlot <- plot_ly(
   data = underlyingsLogReturns,
@@ -915,14 +996,14 @@ VaRPlot <- plot_ly(
   alpha = 0.6
 ) %>%
   add_segments(
-    x = dailyVaRBTC, 
-    xend = dailyVaRBTC, 
+    x = VaRBTC, 
+    xend = VaRBTC, 
     y = 0, 
     yend = 20
     ) %>%
   add_segments(
-    x = dailyESBTC, 
-    xend = dailyESBTC, 
+    x = ESBTC, 
+    xend = ESBTC, 
     y = 0, 
     yend = 20
   ) %>%
@@ -1038,75 +1119,82 @@ app$layout(
           color = colors$text
         )
       ),
-      dccTabs(id = "tabs", 
-              children=list(
-                dccTab(
-                  label='D', 
-                  children=list(
-                    htmlDiv(
-                      list(
-                        dccGraph(
-                          figure = dailyLogReturnTimeSeries,
-                          id = "dailyLogReturnTimeSeries"
-                          )
-                        )
-                      )
-                    )
-                  ),
-        dccTab(
-          label='W', 
-          children=list(
-            htmlDiv(
-              list(
-                dccGraph(
-                  figure = weeklyLogReturnTimeSeries,
-                  id = "weeklyLogReturnTimeSeries"
-                  )
-                )
-              )
-            )
+      dccGraph(
+        figure = dailyLogReturnTimeSeries,
+        id = "dailyLogReturnTimeSeries"
+      ),
+      htmlBr(),
+      dccRadioItems(
+        id = "logTimeSeriesSelector",
+        options=list(
+          list(
+            "label" = "1W", 
+            "value" = "1W"
           ),
-        dccTab(
-          label='M', 
-          children=list(
-            htmlDiv(
-              list(
-                dccGraph(
-                  figure = monthlyLogReturnTimeSeries,
-                  id = "monthlyLogReturnTimeSeries"
-                  )
-                )
-              )
-            )
+          list(
+            "label" = "1M", 
+            "value" = "1M"
           ),
-        dccTab(
-          label='Q', 
-          children=list(
-            htmlDiv(
-              list(
-                dccGraph(
-                  figure = quarterlyLogReturnTimeSeries,
-                  id = "quarterlyLogReturnTimeSeries"
-                  )
-                )
-              )
-            )
+          list(
+            "label" = "3M", 
+            "value" = "3M"
           ),
-        dccTab(
-          label='Y', 
-          children=list(
-            htmlDiv(
-              list(
-                dccGraph(
-                  figure = annualLogReturnTimeSeries,
-                  id = "annualLogReturnTimeSeries"
-                  )
-                )
-              )
-            )
+          list(
+            "label" = "1Y", 
+            "value" = "1Y"
+          ),
+          list(
+            "label" = "5Y", 
+            "value" = "5Y"
+          ),
+          list(
+            "label" = "Max",
+            "value" = "Max"
           )
-        )
         ),
+        value = "Max",
+        labelStyle = list(
+          "display" = "inline-block"
+        ),
+        style = list(
+          textAlign = "center",
+          color = colors$text
+        )
+      ),
+      htmlBr(),
+      dccRadioItems(
+        id = "logTimePeriodSelector",
+        options=list(
+          list(
+            "label" = "Daily\nLog Returns", 
+            "value" = "D"
+          ),
+          list(
+            "label" = "Weekly\nLog Returns", 
+            "value" = "W"
+          ),
+          list(
+            "label" = "Monthly\nLog Returns", 
+            "value" = "M"
+          ),
+          list(
+            "label" = "Quarterly\nLog Returns", 
+            "value" = "Q"
+          ),
+          list(
+            "label" = "Annual\nLog Returns", 
+            "value" = "A"
+          )
+        ),
+        value = "D",
+        labelStyle = list(
+          "display" = "inline-block"
+        ),
+        style = list(
+          textAlign = "center",
+          color = colors$text
+        )
+      ),
       htmlBr(),
       htmlBr(),
       htmlH3(
@@ -1147,6 +1235,45 @@ app$layout(
         id = "VaRPlot"
       ),
       htmlBr(),
+      dccChecklist(
+        options=list(
+          list(
+            "label" = "Bitcoin", 
+            "value" = "BTC"
+            ),
+          list(
+            "label" = "Dogecoin", 
+            "value" = "DOGE"
+            ),
+          list(
+            "label" = "Ethereum", 
+            "value" = "ETH"
+            ),
+          list(
+            "label" = "XRP", 
+            "value" = "XRP"
+            ),
+          list(
+            "label" = "S&P 500", 
+            "value" = "SPY"
+            ),
+          list(
+            "label" = "GLD Gold Shares ETF", 
+            "value" = "GLD"
+            )
+        ),
+        value = list(
+          "BTC"
+          ),
+        labelStyle = list(
+          "display" = "inline-block"
+        ),
+        style = list(
+          textAlign = "center",
+          color = colors$text
+        )
+      ),
+      htmlBr(),
       htmlBr(),
       htmlFooter(
         "The Content is for informational purposes only, you should not construe any such information or other material as legal, tax, investment, financial, or other advice. Nothing contained on our Site constitutes a solicitation, recommendation, endorsement, or offer by Miguel Sebastian de la Mata or any third party service provider to buy or sell any securities or other financial instruments in this or in in any other jurisdiction in which such solicitation or offer would be unlawful under the securities laws of such jurisdiction. All Content on this site is information of a general nature and does not address the circumstances of any particular individual or entity. Nothing in the Site constitutes professional and/or financial advice, nor does any information on the Site constitute a comprehensive or complete statement of the matters discussed or the law relating thereto. Miguel Sebastian de la Mata is not a fiduciary by virtue of any person's use of or access to the Site or Content. You alone assume the sole responsibility of evaluating the merits and risks associated with the use of any information or other Content on the Site before making any decisions based on such information or other Content. In exchange for using the Site, you agree not to hold him, his affiliates or any third party service provider liable for any possible claim for damages arising from any decision you make based on information or other Content made available to you through the Site. There are risks associated with investing in securities. Investing in stocks, bonds, exchange traded funds, mutual funds, cryptocurrencies, and money market funds involve risk of loss.  Loss of principal is possible. Some high risk investments may use leverage, which will accentuate gains & losses. Foreign investing involves special risks, including a greater volatility and political, economic and currency risks and differences in accounting methods. A security's or a firm's past investment performance is not a guarantee or predictor of future investment performance.",
@@ -1158,18 +1285,27 @@ app$layout(
       )
     ),
     style = list(
-      backgroundColor = colors$background
+      backgroundColor = colors$background,
+      borderColor = colors$background
       )
   )
 )
 
 
-# app callback for our interactive parts
+# app callback for our price data
 app$callback(
-  output(id = 'adjReturnsTimeSeries', property = 'figure'),
-  params=list(input(id = 'priceTimeSeriesSelector', property = 'value')),
-  function(value) {
-    durationSelected = NULL
+  output(
+    id = "adjReturnsTimeSeries", 
+    property = "figure"
+    ),
+  params = list(
+    input(
+      id = "priceTimeSeriesSelector", 
+      property = "value"
+      )
+    ),
+  function(value, value2) {
+    durationSelected <- NULL
     if (value == "1W") {
       durationSelected <- which(underlyingsDF$Date >= max(underlyingsDF$Date) - 7)
       durationSelected <- underlyingsDF[durationSelected,]
@@ -1186,7 +1322,7 @@ app$callback(
       durationSelected = which(underlyingsDF$Date >= max(underlyingsDF$Date) - 365 * 5)
       durationSelected <- underlyingsDF[durationSelected,]
     } else {
-      durationSelected = underlyingsDF
+      durationSelected <- underlyingsDF
     }
     
     figure <- plot_ly(
@@ -1358,6 +1494,93 @@ app$callback(
       )
   }
   )
+
+
+# we are going to do another app callback for the log returns time series
+app$callback(
+  output(
+    id = 'dailyLogReturnTimeSeries', 
+    property = 'figure'
+    ),
+  params = list(
+    input(
+      id = 'logTimeSeriesSelector', 
+      property = 'value'
+      ),
+              input(
+                id = "logTimePeriodSelector", 
+                property = "value")
+    ),
+  function(value, value2) {
+    perdiodicitySelected <- NULL
+    if (value2 == "D"){
+      perdiodicitySelected <- underlyingsLogReturns
+    } else if (value2 == "W"){
+      perdiodicitySelected <- weeklyLogReturns
+    } else if (value2 == "M"){
+      perdiodicitySelected <- monthlyLogReturns
+    } else if (value2 == "Q"){
+      perdiodicitySelected <- quarterlyLogReturns
+    } else {
+      perdiodicitySelected <- annualLogReturns
+    }
+    durationSelected <- NULL
+    if (value == "1W") {
+      durationSelected <- which(perdiodicitySelected$Date >= max(perdiodicitySelected$Date) - 7)
+      durationSelected <- perdiodicitySelected[durationSelected,]
+    } else if (value == "1M") {
+      durationSelected = which(perdiodicitySelected$Date >= max(perdiodicitySelected$Date) - 30)
+      durationSelected <- perdiodicitySelected[durationSelected,]
+    } else if (value == "3M") {
+      durationSelected = which(perdiodicitySelected$Date >= max(perdiodicitySelected$Date) - 90)
+      durationSelected <- perdiodicitySelected[durationSelected,]
+    } else if (value == "1Y") {
+      durationSelected = which(perdiodicitySelected$Date >= max(perdiodicitySelected$Date) - 365)
+      durationSelected <- perdiodicitySelected[durationSelected,]
+    } else if (value == "5Y") {
+      durationSelected = which(perdiodicitySelected$Date >= max(perdiodicitySelected$Date) - 365 * 5)
+      durationSelected <- perdiodicitySelected[durationSelected,]
+    } else {
+      durationSelected <- perdiodicitySelected
+    }
+    
+    figure <- plot_ly(
+      data = durationSelected,
+      x = ~Date, 
+      y = ~`BTC-USD`,
+      name = "Bitcoin",
+      type = "bar"
+    ) %>%
+      add_trace(
+        y = ~`DOGE-USD`,
+        name = "Dogecoin"
+      ) %>%
+      add_trace(
+        y = ~`ETH-USD`,
+        name = "Ethereum"
+      ) %>%
+      add_trace(
+        y = ~`XRP-USD`,
+        name = "XRP"
+      ) %>%
+      add_trace(
+        y = ~SPY,
+        name = "S&P 500"
+      ) %>%
+      add_trace(
+        y = ~GLD,
+        name = "GLD"
+      ) %>%
+      layout(
+        plot_bgcolor = colors$background,
+        paper_bgcolor = colors$background,
+        font = list(
+          color = colors$text
+        )
+      )
+  }
+)
+
 
 
 # now we run our app
