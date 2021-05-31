@@ -267,7 +267,7 @@ adjReturnsTimeSeries <- plot_ly(
 # updatemenus component
 updatemenus <- list(
   list(
-    active = TRUE,
+    active = -1,
     type= 'dropdown',
     buttons = list(
       list(
@@ -755,7 +755,7 @@ portfolioBeta <- portfolioBeta %>%
 # updatemenus component
 updatemenus <- list(
   list(
-   active = TRUE,
+   active = -1,
     type= 'dropdown',
     buttons = list(
       list(
@@ -888,6 +888,36 @@ portfolioBeta <- portfolioBeta %>%
   )
 
 
+# lets calculate the density of daily btc
+densityBTC <- density(underlyingsLogReturns$`BTC-USD`)
+
+
+# let's do our daily VaR and cVaR graph
+VaRPlot <- plot_ly(
+  data = underlyingsLogReturns,
+  x = ~densityBTC$x,
+  y = ~densityBTC$y,
+  type = "scatter",
+  mode = "lines",
+  fill = "tozeroy",
+  alpha = 0.6
+) %>%
+  add_segments(
+    x = 0, 
+    xend = 0, 
+    y = 0, 
+    yend = 0
+    ) %>%
+  layout(
+    plot_bgcolor = colors$background,
+    paper_bgcolor = colors$background,
+    font = list(
+      color = colors$text
+    )
+  )
+
+
+
 ################################
 ################################
 ################################
@@ -913,6 +943,7 @@ app <- Dash$new(
 
 # this is where we layout the look of the application
 app$layout(
+  
   htmlDiv(
     list(
       htmlH1(
@@ -922,7 +953,7 @@ app$layout(
           color = colors$text
         )
       ),
-      htmlH4(
+      htmlH6(
         "Cryptocurrency Risk Analysis Tool",
         style = list(
           textAlign = "right",
@@ -942,6 +973,43 @@ app$layout(
         figure = adjReturnsTimeSeries,
         id = "adjReturnsTimeSeries"
         ),
+      htmlBr(),
+      dccRadioItems(
+        options=list(
+          list(
+            "label" = "1W", 
+            "value" = "1W"
+            ),
+          list(
+            "label" = "1M", 
+            "value" = "1M"
+            ),
+          list(
+            "label" = "3M", 
+            "value" = "3M"
+            ),
+          list(
+            "label" = "1Y", 
+            "value" = "1Y"
+            ),
+          list(
+            "label" = "5Y", 
+            "value" = "5Y"
+            ),
+          list(
+            "label" = "Max",
+            "value" = "Max"
+          )
+        ),
+        value = "Max",
+        labelStyle = list(
+          "display" = "inline-block"
+          ),
+        style = list(
+          textAlign = "center",
+          color = colors$text
+        )
+      ),
       htmlBr(),
       htmlBr(),
       htmlH3(
@@ -1045,6 +1113,29 @@ app$layout(
       dccGraph(
         figure = portfolioBeta,
         id = "portfolioBeta"
+      ),
+      htmlBr(),
+      htmlBr(),
+      htmlH3(
+        "Value-at-Risk",
+        style = list(
+          textAlign = "center",
+          color = colors$text
+        )
+      ),
+      dccGraph(
+        figure = VaRPlot,
+        id = "VaRPlot"
+      ),
+      htmlBr(),
+      htmlBr(),
+      htmlFooter(
+        "The Content is for informational purposes only, you should not construe any such information or other material as legal, tax, investment, financial, or other advice. Nothing contained on our Site constitutes a solicitation, recommendation, endorsement, or offer by Miguel Sebastian de la Mata or any third party service provider to buy or sell any securities or other financial instruments in this or in in any other jurisdiction in which such solicitation or offer would be unlawful under the securities laws of such jurisdiction. All Content on this site is information of a general nature and does not address the circumstances of any particular individual or entity. Nothing in the Site constitutes professional and/or financial advice, nor does any information on the Site constitute a comprehensive or complete statement of the matters discussed or the law relating thereto. Miguel Sebastian de la Mata is not a fiduciary by virtue of any person's use of or access to the Site or Content. You alone assume the sole responsibility of evaluating the merits and risks associated with the use of any information or other Content on the Site before making any decisions based on such information or other Content. In exchange for using the Site, you agree not to hold him, his affiliates or any third party service provider liable for any possible claim for damages arising from any decision you make based on information or other Content made available to you through the Site. There are risks associated with investing in securities. Investing in stocks, bonds, exchange traded funds, mutual funds, cryptocurrencies, and money market funds involve risk of loss.  Loss of principal is possible. Some high risk investments may use leverage, which will accentuate gains & losses. Foreign investing involves special risks, including a greater volatility and political, economic and currency risks and differences in accounting methods. A security's or a firm's past investment performance is not a guarantee or predictor of future investment performance.",
+        style = list(
+          textAlign = "left",
+          color = colors$text,
+          fontSize = 6
+          )
       )
     ),
     style = list(
@@ -1053,6 +1144,18 @@ app$layout(
   )
 )
 
+
+# app callback for our interactive parts
+#app$callback(
+ # output(id = 'slider-output-container', property = 'children'),
+  #params=list(input(id = 'my-slider', property = 'value')),
+  #function(value) {
+   # sprintf("you have selected %0.1f", value)
+  #})
+
+
+# now we run our app
 app$run_server(
-  dev_tools_hot_reload=FALSE
+  dev_tools_hot_reload=FALSE,
+  debug = TRUE
   )
