@@ -890,6 +890,18 @@ portfolioBeta <- portfolioBeta %>%
 
 # lets calculate the density of daily btc
 densityBTC <- density(underlyingsLogReturns$`BTC-USD`)
+# now we can calculate VaR to the 90%
+dailyVaRBTC <- qnorm(
+  0.95,
+  mean = mean(underlyingsLogReturns$`BTC-USD`),
+  sd = sd(underlyingsLogReturns$`BTC-USD`)
+  )
+# now lets calculate expexted shortfall
+dailyESBTC <- ESnorm(
+  0.95,
+  mu = mean(underlyingsLogReturns$`BTC-USD`),
+  sd = sd(underlyingsLogReturns$`BTC-USD`)
+)
 
 
 # let's do our daily VaR and cVaR graph
@@ -903,11 +915,17 @@ VaRPlot <- plot_ly(
   alpha = 0.6
 ) %>%
   add_segments(
-    x = 0, 
-    xend = 0, 
+    x = dailyVaRBTC, 
+    xend = dailyVaRBTC, 
     y = 0, 
-    yend = 0
+    yend = 20
     ) %>%
+  add_segments(
+    x = dailyESBTC, 
+    xend = dailyESBTC, 
+    y = 0, 
+    yend = 20
+  ) %>%
   layout(
     plot_bgcolor = colors$background,
     paper_bgcolor = colors$background,
@@ -975,6 +993,7 @@ app$layout(
         ),
       htmlBr(),
       dccRadioItems(
+        id = "priceTimeSeriesSelector",
         options=list(
           list(
             "label" = "1W", 
@@ -1146,12 +1165,199 @@ app$layout(
 
 
 # app callback for our interactive parts
-#app$callback(
- # output(id = 'slider-output-container', property = 'children'),
-  #params=list(input(id = 'my-slider', property = 'value')),
-  #function(value) {
-   # sprintf("you have selected %0.1f", value)
-  #})
+app$callback(
+  output(id = 'adjReturnsTimeSeries', property = 'figure'),
+  params=list(input(id = 'priceTimeSeriesSelector', property = 'value')),
+  function(value) {
+    durationSelected = NULL
+    if (value == "1W") {
+      durationSelected <- which(underlyingsDF$Date >= max(underlyingsDF$Date) - 7)
+      durationSelected <- underlyingsDF[durationSelected,]
+    } else if (value == "1M") {
+      durationSelected = which(underlyingsDF$Date >= max(underlyingsDF$Date) - 30)
+      durationSelected <- underlyingsDF[durationSelected,]
+    } else if (value == "3M") {
+      durationSelected = which(underlyingsDF$Date >= max(underlyingsDF$Date) - 90)
+      durationSelected <- underlyingsDF[durationSelected,]
+    } else if (value == "1Y") {
+      durationSelected = which(underlyingsDF$Date >= max(underlyingsDF$Date) - 365)
+      durationSelected <- underlyingsDF[durationSelected,]
+    } else if (value == "5Y") {
+      durationSelected = which(underlyingsDF$Date >= max(underlyingsDF$Date) - 365 * 5)
+      durationSelected <- underlyingsDF[durationSelected,]
+    } else {
+      durationSelected = underlyingsDF
+    }
+    
+    figure <- plot_ly(
+      data = durationSelected,
+      x = ~Date, 
+      y = ~`BTC-USD`,
+      name = "Bitcoin",
+      type = "scatter",
+      mode = 'lines+markers'
+    ) %>%
+      add_trace(
+        y = ~`DOGE-USD`,
+        name = "Dogecoin",
+        mode = "lines+markers"
+      ) %>%
+      add_trace(
+        y = ~`ETH-USD`,
+        name = "Ethereum",
+        mode = "lines+markers"
+      ) %>%
+      add_trace(
+        y = ~`XRP-USD`,
+        name = "XRP",
+        mode = "lines+markers"
+      ) %>%
+      add_trace(
+        y = ~SPY,
+        name = "S&P 500",
+        mode = "lines+markers"
+      ) %>%
+      add_trace(
+        y = ~GLD,
+        name = "GLD",
+        mode = "lines+markers"
+      )
+    
+    updatemenus <- list(
+      list(
+        active = -1,
+        type= 'dropdown',
+        buttons = list(
+          list(
+            label = "Bitcoin",
+            method = "update",
+            args = list(
+              list(
+                visible = c(
+                  TRUE,
+                  FALSE,
+                  FALSE,
+                  FALSE,
+                  FALSE,
+                  FALSE
+                )
+              ),
+              list(
+                title = "BTC Bitcoin"
+              )
+            )
+          ),
+          list(
+            label = "Dogecoin",
+            method = "update",
+            args = list(
+              list(
+                visible = c(
+                  FALSE, 
+                  TRUE,
+                  FALSE,
+                  FALSE,
+                  FALSE,
+                  FALSE
+                )
+              ),
+              list(
+                title = "DOGE Dogecoin"
+              )
+            )
+          ),
+          list(
+            label = "Ethereum",
+            method = "update",
+            args = list(
+              list(
+                visible = c(
+                  FALSE, 
+                  FALSE,
+                  TRUE,
+                  FALSE,
+                  FALSE,
+                  FALSE
+                )
+              ),
+              list(
+                title = "ETH Ethereum"
+              )
+            ) 
+          ),
+          list(
+            label = "XRP",
+            method = "update",
+            args = list(
+              list(
+                visible = c(
+                  FALSE, 
+                  FALSE,
+                  FALSE,
+                  TRUE,
+                  FALSE,
+                  FALSE
+                )
+              ),
+              list(
+                title = "XRP Ripple"
+              )
+            )
+          ),
+          list(
+            label = "S&P 500",
+            method = "update",
+            args = list(
+              list(
+                visible = c(
+                  FALSE, 
+                  FALSE,
+                  FALSE,
+                  FALSE,
+                  TRUE,
+                  FALSE
+                )
+              ),
+              list(
+                title = "SPY S&P 500 ETF"
+              )
+            ) 
+          ),
+          list(
+            label = "GLD",
+            method = "update",
+            args = list(
+              list(
+                visible = c(
+                  FALSE, 
+                  FALSE,
+                  FALSE,
+                  FALSE,
+                  FALSE,
+                  TRUE
+                )
+              ),
+              list(
+                title = "GLD SPDR Gold Shares ETF"
+              )
+            ) 
+          )
+        )
+      )
+    )
+    
+    figure <- figure %>%
+      layout(
+        updatemenus = updatemenus,
+        showlegend = FALSE,
+        plot_bgcolor = colors$background,
+        paper_bgcolor = colors$background,
+        font = list(
+          color = colors$text
+        )
+      )
+  }
+  )
 
 
 # now we run our app
