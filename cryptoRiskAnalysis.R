@@ -28,6 +28,8 @@ library(dash)
 # these other packages help us work with dash
 library(dashCoreComponents)
 library(dashHtmlComponents)
+# bootstrap stuff
+library(dashBootstrapComponents)
 
 
 
@@ -891,129 +893,129 @@ portfolioBeta <- portfolioBeta %>%
   )
 
 
-# VaR Graph
-
-# lets calculate the density of btc
-densityBTC <- density(underlyingsLogReturns$`BTC-USD`)
-# now we can calculate VaR to the 90%
-VaRBTC <- qnorm(
-  0.95,
-  mean = mean(underlyingsLogReturns$`BTC-USD`),
-  sd = sd(underlyingsLogReturns$`BTC-USD`)
-  )
-# now lets calculate expexted shortfall
-ESBTC <- ESnorm(
-  0.95,
-  mu = mean(underlyingsLogReturns$`BTC-USD`),
-  sd = sd(underlyingsLogReturns$`BTC-USD`)
-)
-
-# lets calculate the density of doge
-densityDoge <- density(underlyingsLogReturns$`DOGE-USD`)
-# now we can calculate VaR to the 90%
-VaRDoge <- qnorm(
-  0.95,
-  mean = mean(underlyingsLogReturns$`DOGE-USD`),
-  sd = sd(underlyingsLogReturns$`DOGE-USD`)
-)
-# now lets calculate expexted shortfall
-ESDoge <- ESnorm(
-  0.95,
-  mu = mean(underlyingsLogReturns$`DOGE-USD`),
-  sd = sd(underlyingsLogReturns$`DOGE-USD`)
-)
-
-# lets calculate the density of ethereum
-densityETH <- density(underlyingsLogReturns$`ETH-USD`)
-# now we can calculate VaR to the 90%
-VaRETH <- qnorm(
-  0.95,
-  mean = mean(underlyingsLogReturns$`ETH-USD`),
-  sd = sd(underlyingsLogReturns$`ETH-USD`)
-)
-# now lets calculate expexted shortfall
-ESETH <- ESnorm(
-  0.95,
-  mu = mean(underlyingsLogReturns$`ETH-USD`),
-  sd = sd(underlyingsLogReturns$`ETH-USD`)
-)
-
-# lets calculate the density of xrp
-densityXRP <- density(underlyingsLogReturns$`XRP-USD`)
-# now we can calculate VaR to the 90%
-VaRXRP <- qnorm(
-  0.95,
-  mean = mean(underlyingsLogReturns$`XRP-USD`),
-  sd = sd(underlyingsLogReturns$`XRP-USD`)
-)
-# now lets calculate expexted shortfall
-ESXRP <- ESnorm(
-  0.95,
-  mu = mean(underlyingsLogReturns$SPY),
-  sd = sd(underlyingsLogReturns$SPY)
-)
-
-# lets calculate the density of spy
-densitySPY <- density(underlyingsLogReturns$SPY)
-# now we can calculate VaR to the 90%
-VaRSPY <- qnorm(
-  0.95,
-  mean = mean(underlyingsLogReturns$SPY),
-  sd = sd(underlyingsLogReturns$SPY)
-)
-# now lets calculate expexted shortfall
-ESSPY <- ESnorm(
-  0.95,
-  mu = mean(underlyingsLogReturns$SPY),
-  sd = sd(underlyingsLogReturns$SPY)
-)
-
-# lets calculate the density of gld
-densityGLD <- density(underlyingsLogReturns$GLD)
-# now we can calculate VaR to the 90%
-VaRGLD <- qnorm(
-  0.95,
-  mean = mean(underlyingsLogReturns$GLD),
-  sd = sd(underlyingsLogReturns$GLD)
-)
-# now lets calculate expexted shortfall
-ESGLD <- ESnorm(
-  0.95,
-  mu = mean(underlyingsLogReturns$GLD),
-  sd = sd(underlyingsLogReturns$GLD)
-)
-
-
-# the actual graphing part
-# let's do our daily VaR and cVaR graph
-VaRPlot <- plot_ly(
-  data = underlyingsLogReturns,
-  x = ~densityBTC$x,
-  y = ~densityBTC$y,
-  type = "scatter",
-  mode = "lines",
-  fill = "tozeroy",
-  alpha = 0.6
-) %>%
-  add_segments(
-    x = VaRBTC, 
-    xend = VaRBTC, 
-    y = 0, 
-    yend = 20
-    ) %>%
-  add_segments(
-    x = ESBTC, 
-    xend = ESBTC, 
-    y = 0, 
-    yend = 20
-  ) %>%
-  layout(
-    plot_bgcolor = colors$background,
-    paper_bgcolor = colors$background,
-    font = list(
-      color = colors$text
-    )
-  )
+# # VaR Graph
+# 
+# # lets calculate the density of btc
+# densityBTC <- density(underlyingsLogReturns$`BTC-USD`)
+# # now we can calculate VaR to the 90%
+# VaRBTC <- qnorm(
+#   0.95,
+#   mean = mean(underlyingsLogReturns$`BTC-USD`),
+#   sd = sd(underlyingsLogReturns$`BTC-USD`)
+#   )
+# # now lets calculate expexted shortfall
+# ESBTC <- ESnorm(
+#   0.95,
+#   mu = mean(underlyingsLogReturns$`BTC-USD`),
+#   sd = sd(underlyingsLogReturns$`BTC-USD`)
+# )
+# 
+# # lets calculate the density of doge
+# densityDoge <- density(underlyingsLogReturns$`DOGE-USD`)
+# # now we can calculate VaR to the 90%
+# VaRDoge <- qnorm(
+#   0.95,
+#   mean = mean(underlyingsLogReturns$`DOGE-USD`),
+#   sd = sd(underlyingsLogReturns$`DOGE-USD`)
+# )
+# # now lets calculate expexted shortfall
+# ESDoge <- ESnorm(
+#   0.95,
+#   mu = mean(underlyingsLogReturns$`DOGE-USD`),
+#   sd = sd(underlyingsLogReturns$`DOGE-USD`)
+# )
+# 
+# # lets calculate the density of ethereum
+# densityETH <- density(underlyingsLogReturns$`ETH-USD`)
+# # now we can calculate VaR to the 90%
+# VaRETH <- qnorm(
+#   0.95,
+#   mean = mean(underlyingsLogReturns$`ETH-USD`),
+#   sd = sd(underlyingsLogReturns$`ETH-USD`)
+# )
+# # now lets calculate expexted shortfall
+# ESETH <- ESnorm(
+#   0.95,
+#   mu = mean(underlyingsLogReturns$`ETH-USD`),
+#   sd = sd(underlyingsLogReturns$`ETH-USD`)
+# )
+# 
+# # lets calculate the density of xrp
+# densityXRP <- density(underlyingsLogReturns$`XRP-USD`)
+# # now we can calculate VaR to the 90%
+# VaRXRP <- qnorm(
+#   0.95,
+#   mean = mean(underlyingsLogReturns$`XRP-USD`),
+#   sd = sd(underlyingsLogReturns$`XRP-USD`)
+# )
+# # now lets calculate expexted shortfall
+# ESXRP <- ESnorm(
+#   0.95,
+#   mu = mean(underlyingsLogReturns$SPY),
+#   sd = sd(underlyingsLogReturns$SPY)
+# )
+# 
+# # lets calculate the density of spy
+# densitySPY <- density(underlyingsLogReturns$SPY)
+# # now we can calculate VaR to the 90%
+# VaRSPY <- qnorm(
+#   0.95,
+#   mean = mean(underlyingsLogReturns$SPY),
+#   sd = sd(underlyingsLogReturns$SPY)
+# )
+# # now lets calculate expexted shortfall
+# ESSPY <- ESnorm(
+#   0.95,
+#   mu = mean(underlyingsLogReturns$SPY),
+#   sd = sd(underlyingsLogReturns$SPY)
+# )
+# 
+# # lets calculate the density of gld
+# densityGLD <- density(underlyingsLogReturns$GLD)
+# # now we can calculate VaR to the 90%
+# VaRGLD <- qnorm(
+#   0.95,
+#   mean = mean(underlyingsLogReturns$GLD),
+#   sd = sd(underlyingsLogReturns$GLD)
+# )
+# # now lets calculate expexted shortfall
+# ESGLD <- ESnorm(
+#   0.95,
+#   mu = mean(underlyingsLogReturns$GLD),
+#   sd = sd(underlyingsLogReturns$GLD)
+# )
+# 
+# 
+# # the actual graphing part
+# # let's do our daily VaR and cVaR graph
+# VaRPlot <- plot_ly(
+#   data = underlyingsLogReturns,
+#   x = ~densityBTC$x,
+#   y = ~densityBTC$y,
+#   type = "scatter",
+#   mode = "lines",
+#   fill = "tozeroy",
+#   alpha = 0.6
+# ) %>%
+#   add_segments(
+#     x = VaRBTC, 
+#     xend = VaRBTC, 
+#     y = 0, 
+#     yend = 20
+#     ) %>%
+#   add_segments(
+#     x = ESBTC, 
+#     xend = ESBTC, 
+#     y = 0, 
+#     yend = 20
+#   ) %>%
+#   layout(
+#     plot_bgcolor = colors$background,
+#     paper_bgcolor = colors$background,
+#     font = list(
+#       color = colors$text
+#     )
+#   )
 
 
 
@@ -1030,19 +1032,18 @@ VaRPlot <- plot_ly(
 
 # let's claim the colors we want to use here
 colors <- list(
-  background = '#111111',
+  background = '#121212',
   text = '#7FDBFF'
 )
 
 # let's initialize our application
 # we can declare our external CSS stylesheet here
 app <- Dash$new(
-  external_stylesheets = "https://codepen.io/chriddyp/pen/bWLwgP.css"
+  external_stylesheets = dbcThemes$SPACELAB
 )
 
 # this is where we layout the look of the application
 app$layout(
-  
   htmlDiv(
     list(
       htmlH1(
@@ -1231,11 +1232,11 @@ app$layout(
         )
       ),
       dccGraph(
-        figure = VaRPlot,
         id = "VaRPlot"
       ),
       htmlBr(),
       dccChecklist(
+        id = "VaRChecklist",
         options=list(
           list(
             "label" = "Bitcoin", 
@@ -1507,9 +1508,10 @@ app$callback(
       id = 'logTimeSeriesSelector', 
       property = 'value'
       ),
-              input(
-                id = "logTimePeriodSelector", 
-                property = "value")
+    input(
+      id = "logTimePeriodSelector", 
+      property = "value"
+      )
     ),
   function(value, value2) {
     perdiodicitySelected <- NULL
@@ -1580,6 +1582,315 @@ app$callback(
       )
   }
 )
+
+
+
+# we are going to do another app callback for the VaR
+app$callback(
+  output(
+    id = 'VaRPlot', 
+    property = 'figure'
+  ),
+  params = list(
+    input(
+      id = 'VaRChecklist', 
+      property = 'value'
+    )
+  ),
+  function(values) {
+    # VaR Graph
+    figure <- plot_ly(
+      data = underlyingsLogReturns
+    ) %>%
+        layout(
+          plot_bgcolor = colors$background,
+          paper_bgcolor = colors$background,
+          font = list(
+            color = colors$text
+          )
+        )
+    
+    valuesList <- unlist(values)
+    print(valuesList[1])
+    print(typeof(valuesList))
+    for(item in valuesList){
+      if(item == "BTC"){
+        # lets calculate the density of btc
+        itemDensity <- density(underlyingsLogReturns$`BTC-USD`)
+        # now we can calculate VaR to the 90%
+        itemVaR <- qnorm(
+          0.95,
+          mean = mean(underlyingsLogReturns$`BTC-USD`),
+          sd = sd(underlyingsLogReturns$`BTC-USD`)
+        )
+        # now lets calculate expexted shortfall
+        itemES <- ESnorm(
+          0.95,
+          mu = mean(underlyingsLogReturns$`BTC-USD`),
+          sd = sd(underlyingsLogReturns$`BTC-USD`)
+        )
+        
+        figure %>%
+          add_trace(
+            x = ~itemDensity$x,
+            y = ~itemDensity$y,
+            type = "scatter",
+            mode = "lines",
+            fill = "tozeroy",
+            alpha = 0.6
+          ) %>%
+          add_segments(
+            x = itemVaR, 
+            xend = itemVaR, 
+            y = 0, 
+            yend = 20
+          ) %>%
+          add_segments(
+            x = itemES, 
+            xend = itemES, 
+            y = 0, 
+            yend = 20
+          )
+      } else if(item == "DOGE"){
+        # lets calculate the density of btc
+        itemDensity <- density(underlyingsLogReturns$`DOGE-USD`)
+        # now we can calculate VaR to the 90%
+        itemVaR <- qnorm(
+          0.95,
+          mean = mean(underlyingsLogReturns$`DOGE-USD`),
+          sd = sd(underlyingsLogReturns$`DOGE-USD`)
+        )
+        # now lets calculate expexted shortfall
+        itemES <- ESnorm(
+          0.95,
+          mu = mean(underlyingsLogReturns$`DOGE-USD`),
+          sd = sd(underlyingsLogReturns$`DOGE-USD`)
+        )
+        
+        figure %>%
+          add_trace(
+            x = ~itemDensity$x,
+            y = ~itemDensity$y,
+            type = "scatter",
+            mode = "lines",
+            fill = "tozeroy",
+            alpha = 0.6
+          ) %>%
+          add_segments(
+            x = itemVaR, 
+            xend = itemVaR, 
+            y = 0, 
+            yend = 20
+          ) %>%
+          add_segments(
+            x = itemES, 
+            xend = itemES, 
+            y = 0, 
+            yend = 20
+          )
+      } else if(item == "ETH"){
+        # lets calculate the density of btc
+        itemDensity <- density(underlyingsLogReturns$`ETH-USD`)
+        # now we can calculate VaR to the 90%
+        itemVaR <- qnorm(
+          0.95,
+          mean = mean(underlyingsLogReturns$`ETH-USD`),
+          sd = sd(underlyingsLogReturns$`ETH-USD`)
+        )
+        # now lets calculate expexted shortfall
+        itemES <- ESnorm(
+          0.95,
+          mu = mean(underlyingsLogReturns$`ETH-USD`),
+          sd = sd(underlyingsLogReturns$`ETH-USD`)
+        )
+        
+        figure %>%
+          add_trace(
+            x = ~itemDensity$x,
+            y = ~itemDensity$y,
+            type = "scatter",
+            mode = "lines",
+            fill = "tozeroy",
+            alpha = 0.6
+          ) %>%
+          add_segments(
+            x = itemVaR, 
+            xend = itemVaR, 
+            y = 0, 
+            yend = 20
+          ) %>%
+          add_segments(
+            x = itemES, 
+            xend = itemES, 
+            y = 0, 
+            yend = 20
+          )
+      } else if(item == "XRP"){
+        # lets calculate the density of btc
+        itemDensity <- density(underlyingsLogReturns$`XRP-USD`)
+        # now we can calculate VaR to the 90%
+        itemVaR <- qnorm(
+          0.95,
+          mean = mean(underlyingsLogReturns$`XRP-USD`),
+          sd = sd(underlyingsLogReturns$`XRP-USD`)
+        )
+        # now lets calculate expexted shortfall
+        itemES <- ESnorm(
+          0.95,
+          mu = mean(underlyingsLogReturns$`XRP-USD`),
+          sd = sd(underlyingsLogReturns$`XRP-USD`)
+        )
+        
+        figure %>%
+          add_trace(
+            x = ~itemDensity$x,
+            y = ~itemDensity$y,
+            type = "scatter",
+            mode = "lines",
+            fill = "tozeroy",
+            alpha = 0.6
+          ) %>%
+          add_segments(
+            x = itemVaR, 
+            xend = itemVaR, 
+            y = 0, 
+            yend = 20
+          ) %>%
+          add_segments(
+            x = itemES, 
+            xend = itemES, 
+            y = 0, 
+            yend = 20
+          )
+      } else if(item == "SPY"){
+        # lets calculate the density of btc
+        itemDensity <- density(underlyingsLogReturns$SPY)
+        # now we can calculate VaR to the 90%
+        itemVaR <- qnorm(
+          0.95,
+          mean = mean(underlyingsLogReturns$SPY),
+          sd = sd(underlyingsLogReturns$SPY)
+        )
+        # now lets calculate expexted shortfall
+        itemES <- ESnorm(
+          0.95,
+          mu = mean(underlyingsLogReturns$SPY),
+          sd = sd(underlyingsLogReturns$SPY)
+        )
+        
+        figure %>%
+          add_trace(
+            x = ~itemDensity$x,
+            y = ~itemDensity$y,
+            type = "scatter",
+            mode = "lines",
+            fill = "tozeroy",
+            alpha = 0.6
+          ) %>%
+          add_segments(
+            x = itemVaR, 
+            xend = itemVaR, 
+            y = 0, 
+            yend = 20
+          ) %>%
+          add_segments(
+            x = itemES, 
+            xend = itemES, 
+            y = 0, 
+            yend = 20
+          )
+      } else {
+        # lets calculate the density of btc
+        itemDensity <- density(underlyingsLogReturns$GLD)
+        # now we can calculate VaR to the 90%
+        itemVaR <- qnorm(
+          0.95,
+          mean = mean(underlyingsLogReturns$GLD),
+          sd = sd(underlyingsLogReturns$GLD)
+        )
+        # now lets calculate expexted shortfall
+        itemES <- ESnorm(
+          0.95,
+          mu = mean(underlyingsLogReturns$GLD),
+          sd = sd(underlyingsLogReturns$GLD)
+        )
+        
+        figure %>%
+          add_trace(
+            x = ~itemDensity$x,
+            y = ~itemDensity$y,
+            type = "scatter",
+            mode = "lines",
+            fill = "tozeroy",
+            alpha = 0.6
+          ) %>%
+          add_segments(
+            x = itemVaR, 
+            xend = itemVaR, 
+            y = 0, 
+            yend = 20
+          ) %>%
+          add_segments(
+            x = itemES, 
+            xend = itemES, 
+            y = 0, 
+            yend = 20
+          )
+      }
+    }
+    
+    # # VaR Graph
+    # figure <- plot_ly(
+    #   data = underlyingsLogReturns
+    # ) %>%
+    #   layout(
+    #     plot_bgcolor = colors$background,
+    #     paper_bgcolor = colors$background,
+    #     font = list(
+    #       color = colors$text
+    #     )
+    #   )
+    # 
+    # for (item in VarChecklistList){
+    #   # lets calculate the density of btc
+    #   itemDensity <- density(item)
+    #   # now we can calculate VaR to the 90%
+    #   itemVaR <- qnorm(
+    #     0.95,
+    #     mean = mean(item),
+    #     sd = sd(item)
+    #   )
+    #   # now lets calculate expexted shortfall
+    #   itemES <- ESnorm(
+    #     0.95,
+    #     mu = mean(item),
+    #     sd = sd(item)
+    #   )
+    #   
+    #   figure %>%
+    #     add_trace(
+    #       x = ~itemDensity$x,
+    #       y = ~itemDensity$y,
+    #       type = "scatter",
+    #       mode = "lines",
+    #       fill = "tozeroy",
+    #       alpha = 0.6
+    #       ) %>%
+    #     add_segments(
+    #       x = itemVaR, 
+    #       xend = itemVaR, 
+    #       y = 0, 
+    #       yend = 20
+    #   ) %>%
+    #     add_segments(
+    #       x = itemES, 
+    #       xend = itemES, 
+    #       y = 0, 
+    #       yend = 20
+    #     )
+    # }
+    }
+  )
 
 
 
