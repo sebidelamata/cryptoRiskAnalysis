@@ -1074,7 +1074,7 @@ app$layout(
         id = "adjReturnsTimeSeries"
         ),
       htmlBr(),
-      dccRadioItems(
+      dbcRadioItems(
         id = "priceTimeSeriesSelector",
         options=list(
           list(
@@ -1103,6 +1103,7 @@ app$layout(
           )
         ),
         value = "Max",
+        inline = TRUE,
         labelStyle = list(
           "display" = "inline-block"
           ),
@@ -1125,7 +1126,7 @@ app$layout(
         id = "dailyLogReturnTimeSeries"
       ),
       htmlBr(),
-      dccRadioItems(
+      dbcRadioItems(
         id = "logTimeSeriesSelector",
         options=list(
           list(
@@ -1157,13 +1158,14 @@ app$layout(
         labelStyle = list(
           "display" = "inline-block"
         ),
+        inline = TRUE,
         style = list(
           textAlign = "center",
           color = colors$text
         )
       ),
       htmlBr(),
-      dccRadioItems(
+      dbcRadioItems(
         id = "logTimePeriodSelector",
         options=list(
           list(
@@ -1191,6 +1193,7 @@ app$layout(
         labelStyle = list(
           "display" = "inline-block"
         ),
+        inline = TRUE,
         style = list(
           textAlign = "center",
           color = colors$text
@@ -1235,7 +1238,7 @@ app$layout(
         id = "VaRPlot"
       ),
       htmlBr(),
-      dccChecklist(
+      dbcRadioItems(
         id = "VaRChecklist",
         options=list(
           list(
@@ -1266,6 +1269,7 @@ app$layout(
         value = list(
           "BTC"
           ),
+        inline = TRUE,
         labelStyle = list(
           "display" = "inline-block"
         ),
@@ -1597,244 +1601,238 @@ app$callback(
       property = 'value'
     )
   ),
-  function(values) {
+  function(item) {
     # VaR Graph
-    figure <- plot_ly(
-      data = underlyingsLogReturns
-    ) %>%
-        layout(
-          plot_bgcolor = colors$background,
-          paper_bgcolor = colors$background,
-          font = list(
+    figure <- plot_ly() %>%
+      layout(
+        plot_bgcolor = colors$background,
+        paper_bgcolor = colors$background,
+        font = list(
             color = colors$text
           )
         )
     
-    valuesList <- unlist(values)
-    print(valuesList[1])
-    print(typeof(valuesList))
-    for(item in valuesList){
-      if(item == "BTC"){
-        # lets calculate the density of btc
-        itemDensity <- density(underlyingsLogReturns$`BTC-USD`)
-        # now we can calculate VaR to the 90%
-        itemVaR <- qnorm(
-          0.95,
-          mean = mean(underlyingsLogReturns$`BTC-USD`),
-          sd = sd(underlyingsLogReturns$`BTC-USD`)
+    if(item == "BTC"){
+      # lets calculate the density of btc
+      itemDensity <- density(underlyingsLogReturns$`BTC-USD`)
+      # now we can calculate VaR to the 90%
+      itemVaR <- qnorm(
+        0.95,
+        mean = mean(underlyingsLogReturns$`BTC-USD`),
+        sd = sd(underlyingsLogReturns$`BTC-USD`)
         )
-        # now lets calculate expexted shortfall
-        itemES <- ESnorm(
-          0.95,
-          mu = mean(underlyingsLogReturns$`BTC-USD`),
-          sd = sd(underlyingsLogReturns$`BTC-USD`)
+      # now lets calculate expexted shortfall
+      itemES <- ESnorm(
+        0.95,
+        mu = mean(underlyingsLogReturns$`BTC-USD`),
+        sd = sd(underlyingsLogReturns$`BTC-USD`)        
         )
         
-        figure %>%
-          add_trace(
-            x = ~itemDensity$x,
-            y = ~itemDensity$y,
-            type = "scatter",
-            mode = "lines",
-            fill = "tozeroy",
-            alpha = 0.6
+      figure %>%
+        add_trace(
+          x = ~itemDensity$x,
+          y = ~itemDensity$y,
+          type = "scatter",
+          mode = "lines",
+          fill = "tozeroy",
+          alpha = 0.6
+        ) %>%
+        add_segments(
+          x = itemVaR, 
+          xend = itemVaR, 
+          y = 0, 
+          yend = 20
           ) %>%
-          add_segments(
-            x = itemVaR, 
-            xend = itemVaR, 
-            y = 0, 
-            yend = 20
-          ) %>%
-          add_segments(
-            x = itemES, 
-            xend = itemES, 
-            y = 0, 
-            yend = 20
+        add_segments(
+          x = itemES, 
+          xend = itemES, 
+          y = 0, 
+          yend = 20
           )
-      } else if(item == "DOGE"){
-        # lets calculate the density of btc
-        itemDensity <- density(underlyingsLogReturns$`DOGE-USD`)
-        # now we can calculate VaR to the 90%
-        itemVaR <- qnorm(
-          0.95,
-          mean = mean(underlyingsLogReturns$`DOGE-USD`),
-          sd = sd(underlyingsLogReturns$`DOGE-USD`)
+    } else if(item == "DOGE"){
+      # lets calculate the density of btc
+      itemDensity <- density(underlyingsLogReturns$`DOGE-USD`)
+      # now we can calculate VaR to the 90%
+      itemVaR <- qnorm(
+        0.95,
+        mean = mean(underlyingsLogReturns$`DOGE-USD`),
+        sd = sd(underlyingsLogReturns$`DOGE-USD`)
         )
-        # now lets calculate expexted shortfall
-        itemES <- ESnorm(
-          0.95,
-          mu = mean(underlyingsLogReturns$`DOGE-USD`),
-          sd = sd(underlyingsLogReturns$`DOGE-USD`)
+      # now lets calculate expexted shortfall
+      itemES <- ESnorm(
+        0.95,
+        mu = mean(underlyingsLogReturns$`DOGE-USD`),
+        sd = sd(underlyingsLogReturns$`DOGE-USD`)
         )
         
-        figure %>%
-          add_trace(
-            x = ~itemDensity$x,
-            y = ~itemDensity$y,
-            type = "scatter",
-            mode = "lines",
-            fill = "tozeroy",
-            alpha = 0.6
+      figure %>%
+        add_trace(
+          x = ~itemDensity$x,
+          y = ~itemDensity$y,
+          type = "scatter",
+          mode = "lines",
+          fill = "tozeroy",
+          alpha = 0.6
           ) %>%
-          add_segments(
-            x = itemVaR, 
-            xend = itemVaR, 
-            y = 0, 
-            yend = 20
+        add_segments(
+          x = itemVaR, 
+          xend = itemVaR, 
+          y = 0, 
+          yend = 20
           ) %>%
-          add_segments(
-            x = itemES, 
-            xend = itemES, 
-            y = 0, 
-            yend = 20
+        add_segments(
+          x = itemES, 
+          xend = itemES, 
+          y = 0, 
+          yend = 20
           )
-      } else if(item == "ETH"){
-        # lets calculate the density of btc
-        itemDensity <- density(underlyingsLogReturns$`ETH-USD`)
-        # now we can calculate VaR to the 90%
-        itemVaR <- qnorm(
-          0.95,
-          mean = mean(underlyingsLogReturns$`ETH-USD`),
-          sd = sd(underlyingsLogReturns$`ETH-USD`)
+     } else if(item == "ETH"){
+      # lets calculate the density of btc
+      itemDensity <- density(underlyingsLogReturns$`ETH-USD`)
+      # now we can calculate VaR to the 90%
+      itemVaR <- qnorm(
+        0.95,
+        mean = mean(underlyingsLogReturns$`ETH-USD`),
+        sd = sd(underlyingsLogReturns$`ETH-USD`)
         )
-        # now lets calculate expexted shortfall
-        itemES <- ESnorm(
-          0.95,
-          mu = mean(underlyingsLogReturns$`ETH-USD`),
-          sd = sd(underlyingsLogReturns$`ETH-USD`)
+      # now lets calculate expexted shortfall
+      itemES <- ESnorm(
+        0.95,
+        mu = mean(underlyingsLogReturns$`ETH-USD`),
+        sd = sd(underlyingsLogReturns$`ETH-USD`)
         )
         
-        figure %>%
-          add_trace(
-            x = ~itemDensity$x,
-            y = ~itemDensity$y,
-            type = "scatter",
-            mode = "lines",
-            fill = "tozeroy",
-            alpha = 0.6
+      figure %>%
+        add_trace(
+          x = ~itemDensity$x,
+          y = ~itemDensity$y,
+          type = "scatter",
+          mode = "lines",
+          fill = "tozeroy",
+          alpha = 0.6
           ) %>%
-          add_segments(
-            x = itemVaR, 
-            xend = itemVaR, 
-            y = 0, 
-            yend = 20
+        add_segments(
+          x = itemVaR, 
+          xend = itemVaR, 
+          y = 0, 
+          yend = 20
           ) %>%
-          add_segments(
-            x = itemES, 
-            xend = itemES, 
-            y = 0, 
-            yend = 20
+        add_segments(
+          x = itemES, 
+          xend = itemES, 
+          y = 0, 
+          yend = 20
           )
-      } else if(item == "XRP"){
-        # lets calculate the density of btc
-        itemDensity <- density(underlyingsLogReturns$`XRP-USD`)
-        # now we can calculate VaR to the 90%
-        itemVaR <- qnorm(
-          0.95,
-          mean = mean(underlyingsLogReturns$`XRP-USD`),
-          sd = sd(underlyingsLogReturns$`XRP-USD`)
+    } else if(item == "XRP"){
+      # lets calculate the density of btc
+      itemDensity <- density(underlyingsLogReturns$`XRP-USD`)
+      # now we can calculate VaR to the 90%
+      itemVaR <- qnorm(
+        0.95,
+        mean = mean(underlyingsLogReturns$`XRP-USD`),
+        sd = sd(underlyingsLogReturns$`XRP-USD`)
         )
-        # now lets calculate expexted shortfall
-        itemES <- ESnorm(
-          0.95,
-          mu = mean(underlyingsLogReturns$`XRP-USD`),
-          sd = sd(underlyingsLogReturns$`XRP-USD`)
+      # now lets calculate expexted shortfall
+      itemES <- ESnorm(
+        0.95,
+        mu = mean(underlyingsLogReturns$`XRP-USD`),
+        sd = sd(underlyingsLogReturns$`XRP-USD`)
         )
         
-        figure %>%
-          add_trace(
-            x = ~itemDensity$x,
-            y = ~itemDensity$y,
-            type = "scatter",
-            mode = "lines",
-            fill = "tozeroy",
-            alpha = 0.6
+      figure %>%
+        add_trace(
+          x = ~itemDensity$x,
+          y = ~itemDensity$y,
+          type = "scatter",
+          mode = "lines",
+          fill = "tozeroy",
+          alpha = 0.6
           ) %>%
-          add_segments(
-            x = itemVaR, 
-            xend = itemVaR, 
-            y = 0, 
-            yend = 20
+        add_segments(
+          x = itemVaR, 
+          xend = itemVaR, 
+          y = 0, 
+          yend = 20
           ) %>%
-          add_segments(
-            x = itemES, 
-            xend = itemES, 
-            y = 0, 
-            yend = 20
+        add_segments(
+          x = itemES, 
+          xend = itemES, 
+          y = 0, 
+          yend = 20
           )
-      } else if(item == "SPY"){
-        # lets calculate the density of btc
-        itemDensity <- density(underlyingsLogReturns$SPY)
-        # now we can calculate VaR to the 90%
-        itemVaR <- qnorm(
-          0.95,
-          mean = mean(underlyingsLogReturns$SPY),
-          sd = sd(underlyingsLogReturns$SPY)
+    } else if(item == "SPY"){
+      # lets calculate the density of btc
+      itemDensity <- density(underlyingsLogReturns$SPY)
+      # now we can calculate VaR to the 90%
+      itemVaR <- qnorm(
+        0.95,
+        mean = mean(underlyingsLogReturns$SPY),
+        sd = sd(underlyingsLogReturns$SPY)
         )
-        # now lets calculate expexted shortfall
-        itemES <- ESnorm(
-          0.95,
-          mu = mean(underlyingsLogReturns$SPY),
-          sd = sd(underlyingsLogReturns$SPY)
+      # now lets calculate expexted shortfall
+      itemES <- ESnorm(
+        0.95,
+        mu = mean(underlyingsLogReturns$SPY),
+        sd = sd(underlyingsLogReturns$SPY)
         )
         
-        figure %>%
-          add_trace(
-            x = ~itemDensity$x,
-            y = ~itemDensity$y,
-            type = "scatter",
-            mode = "lines",
-            fill = "tozeroy",
-            alpha = 0.6
+      figure %>%
+        add_trace(
+          x = ~itemDensity$x,
+          y = ~itemDensity$y,
+          type = "scatter",
+          mode = "lines",
+          fill = "tozeroy",
+          alpha = 0.6
           ) %>%
-          add_segments(
-            x = itemVaR, 
-            xend = itemVaR, 
-            y = 0, 
-            yend = 20
+        add_segments(
+          x = itemVaR, 
+          xend = itemVaR, 
+          y = 0, 
+          yend = 20
           ) %>%
-          add_segments(
-            x = itemES, 
-            xend = itemES, 
-            y = 0, 
-            yend = 20
+        add_segments(
+          x = itemES, 
+          xend = itemES, 
+          y = 0, 
+          yend = 20
           )
-      } else {
-        # lets calculate the density of btc
-        itemDensity <- density(underlyingsLogReturns$GLD)
-        # now we can calculate VaR to the 90%
-        itemVaR <- qnorm(
-          0.95,
-          mean = mean(underlyingsLogReturns$GLD),
-          sd = sd(underlyingsLogReturns$GLD)
+    } else {
+      # lets calculate the density of btc
+      itemDensity <- density(underlyingsLogReturns$GLD)
+      # now we can calculate VaR to the 90%
+      itemVaR <- qnorm(
+        0.95,
+        mean = mean(underlyingsLogReturns$GLD),
+        sd = sd(underlyingsLogReturns$GLD)
         )
-        # now lets calculate expexted shortfall
-        itemES <- ESnorm(
-          0.95,
-          mu = mean(underlyingsLogReturns$GLD),
-          sd = sd(underlyingsLogReturns$GLD)
+      # now lets calculate expexted shortfall
+      itemES <- ESnorm(
+        0.95,
+        mu = mean(underlyingsLogReturns$GLD),
+        sd = sd(underlyingsLogReturns$GLD)
         )
         
-        figure %>%
-          add_trace(
-            x = ~itemDensity$x,
-            y = ~itemDensity$y,
-            type = "scatter",
-            mode = "lines",
-            fill = "tozeroy",
-            alpha = 0.6
+      figure %>%
+        add_trace(
+          x = ~itemDensity$x,
+          y = ~itemDensity$y,
+          type = "scatter",
+          mode = "lines",
+          fill = "tozeroy",
+          alpha = 0.6
           ) %>%
-          add_segments(
-            x = itemVaR, 
-            xend = itemVaR, 
-            y = 0, 
-            yend = 20
+        add_segments(
+          x = itemVaR, 
+          xend = itemVaR, 
+          y = 0, 
+          yend = 20
           ) %>%
-          add_segments(
-            x = itemES, 
-            xend = itemES, 
-            y = 0, 
-            yend = 20
+        add_segments(
+          x = itemES, 
+          xend = itemES, 
+          y = 0, 
+          yend = 20
           )
       }
     }
@@ -1889,7 +1887,6 @@ app$callback(
     #       yend = 20
     #     )
     # }
-    }
   )
 
 
