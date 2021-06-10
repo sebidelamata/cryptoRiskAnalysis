@@ -32,6 +32,12 @@ library(dashHtmlComponents)
 library(dashBootstrapComponents)
 
 
+#####################
+## Set Random Seed ##
+#####################
+
+set.seed(666)
+
 
 #################################
 #################################
@@ -227,6 +233,13 @@ annualLogReturns <- annualLogReturns %>%
 ###############################
 ###############################
 
+
+
+# let's claim the colors we want to use here
+colors <- list(
+  background = '#121212',
+  text = '#f2f5f0'
+)
 
 
 
@@ -886,6 +899,9 @@ portfolioBeta <- portfolioBeta %>%
     updatemenus = updatemenus,
     showlegend = FALSE,
     plot_bgcolor = colors$background,
+    yaxis = list(
+      title = ""
+    ),
     paper_bgcolor = colors$background,
     font = list(
       color = colors$text
@@ -1030,11 +1046,6 @@ portfolioBeta <- portfolioBeta %>%
 
 
 
-# let's claim the colors we want to use here
-colors <- list(
-  background = '#121212',
-  text = '#7FDBFF'
-)
 
 # let's initialize our application
 # we can declare our external CSS stylesheet here
@@ -1279,6 +1290,43 @@ app$layout(
         )
       ),
       htmlBr(),
+      dbcRadioItems(
+        id = "VaRPeriodicitySelector",
+        options=list(
+          list(
+            "label" = "Daily", 
+            "value" = "Daily"
+          ),
+          list(
+            "label" = "Weekly", 
+            "value" = "Weekly"
+          ),
+          list(
+            "label" = "Monthly", 
+            "value" = "Monthly"
+          ),
+          list(
+            "label" = "Quarterly", 
+            "value" = "Quarterly"
+          ),
+          list(
+            "label" = "Annualy", 
+            "value" = "Annualy"
+          )
+        ), 
+        value = list(
+          "Daily"
+          ),
+        labelStyle = list(
+          "display" = "inline-block"
+        ),
+        inline = TRUE,
+        style = list(
+          textAlign = "center",
+          color = colors$text
+        )
+        ),
+      htmlBr(),
       htmlBr(),
       htmlFooter(
         "The Content is for informational purposes only, you should not construe any such information or other material as legal, tax, investment, financial, or other advice. Nothing contained on our Site constitutes a solicitation, recommendation, endorsement, or offer by Miguel Sebastian de la Mata or any third party service provider to buy or sell any securities or other financial instruments in this or in in any other jurisdiction in which such solicitation or offer would be unlawful under the securities laws of such jurisdiction. All Content on this site is information of a general nature and does not address the circumstances of any particular individual or entity. Nothing in the Site constitutes professional and/or financial advice, nor does any information on the Site constitute a comprehensive or complete statement of the matters discussed or the law relating thereto. Miguel Sebastian de la Mata is not a fiduciary by virtue of any person's use of or access to the Site or Content. You alone assume the sole responsibility of evaluating the merits and risks associated with the use of any information or other Content on the Site before making any decisions based on such information or other Content. In exchange for using the Site, you agree not to hold him, his affiliates or any third party service provider liable for any possible claim for damages arising from any decision you make based on information or other Content made available to you through the Site. There are risks associated with investing in securities. Investing in stocks, bonds, exchange traded funds, mutual funds, cryptocurrencies, and money market funds involve risk of loss.  Loss of principal is possible. Some high risk investments may use leverage, which will accentuate gains & losses. Foreign investing involves special risks, including a greater volatility and political, economic and currency risks and differences in accounting methods. A security's or a firm's past investment performance is not a guarantee or predictor of future investment performance.",
@@ -1321,10 +1369,10 @@ app$callback(
       durationSelected = which(underlyingsDF$Date >= max(underlyingsDF$Date) - 90)
       durationSelected <- underlyingsDF[durationSelected,]
     } else if (value == "1Y") {
-      durationSelected = which(underlyingsDF$Date >= max(underlyingsDF$Date) - 365)
+      durationSelected = which(underlyingsDF$Date >= max(underlyingsDF$Date) - 360)
       durationSelected <- underlyingsDF[durationSelected,]
     } else if (value == "5Y") {
-      durationSelected = which(underlyingsDF$Date >= max(underlyingsDF$Date) - 365 * 5)
+      durationSelected = which(underlyingsDF$Date >= max(underlyingsDF$Date) - 360 * 5)
       durationSelected <- underlyingsDF[durationSelected,]
     } else {
       durationSelected <- underlyingsDF
@@ -1490,6 +1538,10 @@ app$callback(
     figure <- figure %>%
       layout(
         updatemenus = updatemenus,
+        yaxis = list(
+          title = "Price (USD)",
+          tickformat = "$"
+          ),
         showlegend = FALSE,
         plot_bgcolor = colors$background,
         paper_bgcolor = colors$background,
@@ -1580,6 +1632,10 @@ app$callback(
       layout(
         plot_bgcolor = colors$background,
         paper_bgcolor = colors$background,
+        yaxis = list(
+          title = "Percent return",
+          tickformat = "%"
+        ),
         font = list(
           color = colors$text
         )
@@ -1599,9 +1655,28 @@ app$callback(
     input(
       id = 'VaRChecklist', 
       property = 'value'
+    ),
+    input(
+      id = "VaRPeriodicitySelector",
+      property = "value"
     )
   ),
-  function(item) {
+  function(item, value2) {
+    
+    # select what period of time we want to estimate risk for
+    perdiodicitySelected <- NULL
+    if (value2 == "Daily"){
+      perdiodicitySelected <- underlyingsLogReturns
+    } else if (value2 == "Weekly"){
+      perdiodicitySelected <- weeklyLogReturns
+    } else if (value2 == "Monthly"){
+      perdiodicitySelected <- monthlyLogReturns
+    } else if (value2 == "Quarterly"){
+      perdiodicitySelected <- quarterlyLogReturns
+    } else {
+      perdiodicitySelected <- annualLogReturns
+    }
+    
     # VaR Graph
     figure <- plot_ly() %>%
       layout(
@@ -1614,18 +1689,18 @@ app$callback(
     
     if(item == "BTC"){
       # lets calculate the density of btc
-      itemDensity <- density(underlyingsLogReturns$`BTC-USD`)
+      itemDensity <- density(perdiodicitySelected$`BTC-USD`)
       # now we can calculate VaR to the 90%
       itemVaR <- qnorm(
         0.95,
-        mean = mean(underlyingsLogReturns$`BTC-USD`),
-        sd = sd(underlyingsLogReturns$`BTC-USD`)
+        mean = mean(perdiodicitySelected$`BTC-USD`),
+        sd = sd(perdiodicitySelected$`BTC-USD`)
         )
       # now lets calculate expexted shortfall
       itemES <- ESnorm(
         0.95,
-        mu = mean(underlyingsLogReturns$`BTC-USD`),
-        sd = sd(underlyingsLogReturns$`BTC-USD`)        
+        mu = mean(perdiodicitySelected$`BTC-USD`),
+        sd = sd(perdiodicitySelected$`BTC-USD`)        
         )
         
       figure %>%
@@ -1641,28 +1716,30 @@ app$callback(
           x = itemVaR, 
           xend = itemVaR, 
           y = 0, 
-          yend = 20
+          yend = max(itemDensity$y) * 1.1,
+          name = "VaR"
           ) %>%
         add_segments(
           x = itemES, 
           xend = itemES, 
           y = 0, 
-          yend = 20
+          yend = max(itemDensity$y) * 1.1,
+          name = "CVaR"
           )
     } else if(item == "DOGE"){
       # lets calculate the density of btc
-      itemDensity <- density(underlyingsLogReturns$`DOGE-USD`)
+      itemDensity <- density(perdiodicitySelected$`DOGE-USD`)
       # now we can calculate VaR to the 90%
       itemVaR <- qnorm(
         0.95,
-        mean = mean(underlyingsLogReturns$`DOGE-USD`),
-        sd = sd(underlyingsLogReturns$`DOGE-USD`)
+        mean = mean(perdiodicitySelected$`DOGE-USD`),
+        sd = sd(perdiodicitySelected$`DOGE-USD`)
         )
       # now lets calculate expexted shortfall
       itemES <- ESnorm(
         0.95,
-        mu = mean(underlyingsLogReturns$`DOGE-USD`),
-        sd = sd(underlyingsLogReturns$`DOGE-USD`)
+        mu = mean(perdiodicitySelected$`DOGE-USD`),
+        sd = sd(perdiodicitySelected$`DOGE-USD`)
         )
         
       figure %>%
@@ -1678,28 +1755,30 @@ app$callback(
           x = itemVaR, 
           xend = itemVaR, 
           y = 0, 
-          yend = 20
+          yend = max(itemDensity$y) * 1.1,
+          name = "VaR"
           ) %>%
         add_segments(
           x = itemES, 
           xend = itemES, 
           y = 0, 
-          yend = 20
+          yend = max(itemDensity$y) * 1.1,
+          name = "CVaR"
           )
      } else if(item == "ETH"){
       # lets calculate the density of btc
-      itemDensity <- density(underlyingsLogReturns$`ETH-USD`)
+      itemDensity <- density(perdiodicitySelected$`ETH-USD`)
       # now we can calculate VaR to the 90%
       itemVaR <- qnorm(
         0.95,
-        mean = mean(underlyingsLogReturns$`ETH-USD`),
-        sd = sd(underlyingsLogReturns$`ETH-USD`)
+        mean = mean(perdiodicitySelected$`ETH-USD`),
+        sd = sd(perdiodicitySelected$`ETH-USD`)
         )
       # now lets calculate expexted shortfall
       itemES <- ESnorm(
         0.95,
-        mu = mean(underlyingsLogReturns$`ETH-USD`),
-        sd = sd(underlyingsLogReturns$`ETH-USD`)
+        mu = mean(perdiodicitySelected$`ETH-USD`),
+        sd = sd(perdiodicitySelected$`ETH-USD`)
         )
         
       figure %>%
@@ -1715,28 +1794,30 @@ app$callback(
           x = itemVaR, 
           xend = itemVaR, 
           y = 0, 
-          yend = 20
+          yend = max(itemDensity$y) * 1.1,
+          name = "VaR"
           ) %>%
         add_segments(
           x = itemES, 
           xend = itemES, 
           y = 0, 
-          yend = 20
+          yend = max(itemDensity$y) * 1.1,
+          name = "CVaR"
           )
     } else if(item == "XRP"){
       # lets calculate the density of btc
-      itemDensity <- density(underlyingsLogReturns$`XRP-USD`)
+      itemDensity <- density(perdiodicitySelected$`XRP-USD`)
       # now we can calculate VaR to the 90%
       itemVaR <- qnorm(
         0.95,
-        mean = mean(underlyingsLogReturns$`XRP-USD`),
-        sd = sd(underlyingsLogReturns$`XRP-USD`)
+        mean = mean(perdiodicitySelected$`XRP-USD`),
+        sd = sd(perdiodicitySelected$`XRP-USD`)
         )
       # now lets calculate expexted shortfall
       itemES <- ESnorm(
         0.95,
-        mu = mean(underlyingsLogReturns$`XRP-USD`),
-        sd = sd(underlyingsLogReturns$`XRP-USD`)
+        mu = mean(perdiodicitySelected$`XRP-USD`),
+        sd = sd(perdiodicitySelected$`XRP-USD`)
         )
         
       figure %>%
@@ -1752,28 +1833,30 @@ app$callback(
           x = itemVaR, 
           xend = itemVaR, 
           y = 0, 
-          yend = 20
+          yend = max(itemDensity$y) * 1.1,
+          name = "VaR"
           ) %>%
         add_segments(
           x = itemES, 
           xend = itemES, 
           y = 0, 
-          yend = 20
+          yend = max(itemDensity$y) * 1.1,
+          name = "CVaR"
           )
     } else if(item == "SPY"){
       # lets calculate the density of btc
-      itemDensity <- density(underlyingsLogReturns$SPY)
+      itemDensity <- density(perdiodicitySelected$SPY)
       # now we can calculate VaR to the 90%
       itemVaR <- qnorm(
         0.95,
-        mean = mean(underlyingsLogReturns$SPY),
-        sd = sd(underlyingsLogReturns$SPY)
+        mean = mean(perdiodicitySelected$SPY),
+        sd = sd(perdiodicitySelected$SPY)
         )
       # now lets calculate expexted shortfall
       itemES <- ESnorm(
         0.95,
-        mu = mean(underlyingsLogReturns$SPY),
-        sd = sd(underlyingsLogReturns$SPY)
+        mu = mean(perdiodicitySelected$SPY),
+        sd = sd(perdiodicitySelected$SPY)
         )
         
       figure %>%
@@ -1789,28 +1872,30 @@ app$callback(
           x = itemVaR, 
           xend = itemVaR, 
           y = 0, 
-          yend = 20
+          yend = max(itemDensity$y) * 1.1,
+          name = "VaR"
           ) %>%
         add_segments(
           x = itemES, 
           xend = itemES, 
           y = 0, 
-          yend = 20
+          yend = max(itemDensity$y) * 1.1,
+          name = "CVaR"
           )
     } else {
       # lets calculate the density of btc
-      itemDensity <- density(underlyingsLogReturns$GLD)
+      itemDensity <- density(perdiodicitySelected$GLD)
       # now we can calculate VaR to the 90%
       itemVaR <- qnorm(
         0.95,
-        mean = mean(underlyingsLogReturns$GLD),
-        sd = sd(underlyingsLogReturns$GLD)
+        mean = mean(perdiodicitySelected$GLD),
+        sd = sd(perdiodicitySelected$GLD)
         )
       # now lets calculate expexted shortfall
       itemES <- ESnorm(
         0.95,
-        mu = mean(underlyingsLogReturns$GLD),
-        sd = sd(underlyingsLogReturns$GLD)
+        mu = mean(perdiodicitySelected$GLD),
+        sd = sd(perdiodicitySelected$GLD)
         )
         
       figure %>%
@@ -1826,67 +1911,18 @@ app$callback(
           x = itemVaR, 
           xend = itemVaR, 
           y = 0, 
-          yend = 20
+          yend = max(itemDensity$y) * 1.1,
+          name = "VaR"
           ) %>%
         add_segments(
           x = itemES, 
           xend = itemES, 
           y = 0, 
-          yend = 20
+          yend = max(itemDensity$y) * 1.1,
+          name = "CVaR"
           )
       }
     }
-    
-    # # VaR Graph
-    # figure <- plot_ly(
-    #   data = underlyingsLogReturns
-    # ) %>%
-    #   layout(
-    #     plot_bgcolor = colors$background,
-    #     paper_bgcolor = colors$background,
-    #     font = list(
-    #       color = colors$text
-    #     )
-    #   )
-    # 
-    # for (item in VarChecklistList){
-    #   # lets calculate the density of btc
-    #   itemDensity <- density(item)
-    #   # now we can calculate VaR to the 90%
-    #   itemVaR <- qnorm(
-    #     0.95,
-    #     mean = mean(item),
-    #     sd = sd(item)
-    #   )
-    #   # now lets calculate expexted shortfall
-    #   itemES <- ESnorm(
-    #     0.95,
-    #     mu = mean(item),
-    #     sd = sd(item)
-    #   )
-    #   
-    #   figure %>%
-    #     add_trace(
-    #       x = ~itemDensity$x,
-    #       y = ~itemDensity$y,
-    #       type = "scatter",
-    #       mode = "lines",
-    #       fill = "tozeroy",
-    #       alpha = 0.6
-    #       ) %>%
-    #     add_segments(
-    #       x = itemVaR, 
-    #       xend = itemVaR, 
-    #       y = 0, 
-    #       yend = 20
-    #   ) %>%
-    #     add_segments(
-    #       x = itemES, 
-    #       xend = itemES, 
-    #       y = 0, 
-    #       yend = 20
-    #     )
-    # }
   )
 
 
