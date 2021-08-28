@@ -235,176 +235,176 @@ annualLogReturns <- annualLogReturns %>%
 # it makes more sense to read this way (to me).
 
 # time series plot of prices
-# adjReturnsTimeSeries <- plot_ly(
-#   data = underlyingsDF,
-#   x = ~Date, 
-#   y = ~`BTC-USD`,
-#   name = "Bitcoin",
-#   type = "scatter",
-#   mode = 'lines+markers'
-#   ) %>%
-#   add_trace(
-#     y = ~`DOGE-USD`,
-#     name = "Dogecoin",
-#     mode = "lines+markers"
-#   ) %>%
-#   add_trace(
-#     y = ~`ETH-USD`,
-#     name = "Ethereum",
-#     mode = "lines+markers"
-#   ) %>%
-#   add_trace(
-#     y = ~`XRP-USD`,
-#     name = "XRP",
-#     mode = "lines+markers"
-#   ) %>%
-#   add_trace(
-#     y = ~SPY,
-#     name = "S&P 500",
-#     mode = "lines+markers"
-#   ) %>%
-#   add_trace(
-#     y = ~GLD,
-#     name = "GLD",
-#     mode = "lines+markers"
-#   )
-# 
-# # updatemenus component
-# updatemenus <- list(
-#   list(
-#     active = -1,
-#     type= 'dropdown',
-#     buttons = list(
-#       list(
-#         label = "Bitcoin",
-#         method = "update",
-#         args = list(
-#           list(
-#             visible = c(
-#               TRUE,
-#               FALSE,
-#               FALSE,
-#               FALSE,
-#               FALSE,
-#               FALSE
-#             )
-#           ),
-#           list(
-#             title = "BTC Bitcoin"
-#           )
-#         )
-#       ),
-#       list(
-#         label = "Dogecoin",
-#         method = "update",
-#         args = list(
-#           list(
-#             visible = c(
-#               FALSE, 
-#               TRUE,
-#               FALSE,
-#               FALSE,
-#               FALSE,
-#               FALSE
-#             )
-#           ),
-#           list(
-#             title = "DOGE Dogecoin"
-#           )
-#         )
-#       ),
-#       list(
-#         label = "Ethereum",
-#         method = "update",
-#         args = list(
-#           list(
-#             visible = c(
-#               FALSE, 
-#               FALSE,
-#               TRUE,
-#               FALSE,
-#               FALSE,
-#               FALSE
-#             )
-#           ),
-#           list(
-#             title = "ETH Ethereum"
-#           )
-#         ) 
-#       ),
-#       list(
-#         label = "XRP",
-#         method = "update",
-#         args = list(
-#           list(
-#             visible = c(
-#               FALSE, 
-#               FALSE,
-#               FALSE,
-#               TRUE,
-#               FALSE,
-#               FALSE
-#             )
-#           ),
-#           list(
-#             title = "XRP Ripple"
-#           )
-#         )
-#       ),
-#       list(
-#         label = "S&P 500",
-#         method = "update",
-#         args = list(
-#           list(
-#             visible = c(
-#               FALSE, 
-#               FALSE,
-#               FALSE,
-#               FALSE,
-#               TRUE,
-#               FALSE
-#             )
-#           ),
-#           list(
-#             title = "SPY S&P 500 ETF"
-#           )
-#         ) 
-#       ),
-#       list(
-#         label = "GLD",
-#         method = "update",
-#         args = list(
-#           list(
-#             visible = c(
-#               FALSE, 
-#               FALSE,
-#               FALSE,
-#               FALSE,
-#               FALSE,
-#               TRUE
-#             )
-#           ),
-#           list(
-#             title = "GLD SPDR Gold Shares ETF"
-#           )
-#         ) 
-#       )
-#     )
-#   )
-# )
-# 
-# 
-# # now lets add the annotation button and stylings and shit
-# adjReturnsTimeSeries <- adjReturnsTimeSeries %>%
-#   layout(
-#     updatemenus = updatemenus,
-#     showlegend = FALSE,
-#     plot_bgcolor = colors$background,
-#     paper_bgcolor = colors$background,
-#     font = list(
-#       color = colors$text
-#     )
-#   )
+adjReturnsTimeSeries <- plot_ly(
+  data = underlyingsDF,
+  x = ~Date,
+  y = ~`BTC-USD`,
+  name = "Bitcoin",
+  type = "scatter",
+  mode = 'lines+markers'
+  ) %>%
+  add_trace(
+    y = ~`DOGE-USD`,
+    name = "Dogecoin",
+    mode = "lines+markers"
+  ) %>%
+  add_trace(
+    y = ~`ETH-USD`,
+    name = "Ethereum",
+    mode = "lines+markers"
+  ) %>%
+  add_trace(
+    y = ~`XRP-USD`,
+    name = "XRP",
+    mode = "lines+markers"
+  ) %>%
+  add_trace(
+    y = ~SPY,
+    name = "S&P 500",
+    mode = "lines+markers"
+  ) %>%
+  add_trace(
+    y = ~GLD,
+    name = "GLD",
+    mode = "lines+markers"
+  )
+
+# updatemenus component
+updatemenus <- list(
+  list(
+    active = -1,
+    type= 'dropdown',
+    buttons = list(
+      list(
+        label = "Bitcoin",
+        method = "update",
+        args = list(
+          list(
+            visible = c(
+              TRUE,
+              FALSE,
+              FALSE,
+              FALSE,
+              FALSE,
+              FALSE
+            )
+          ),
+          list(
+            title = "BTC Bitcoin"
+          )
+        )
+      ),
+      list(
+        label = "Dogecoin",
+        method = "update",
+        args = list(
+          list(
+            visible = c(
+              FALSE,
+              TRUE,
+              FALSE,
+              FALSE,
+              FALSE,
+              FALSE
+            )
+          ),
+          list(
+            title = "DOGE Dogecoin"
+          )
+        )
+      ),
+      list(
+        label = "Ethereum",
+        method = "update",
+        args = list(
+          list(
+            visible = c(
+              FALSE,
+              FALSE,
+              TRUE,
+              FALSE,
+              FALSE,
+              FALSE
+            )
+          ),
+          list(
+            title = "ETH Ethereum"
+          )
+        )
+      ),
+      list(
+        label = "XRP",
+        method = "update",
+        args = list(
+          list(
+            visible = c(
+              FALSE,
+              FALSE,
+              FALSE,
+              TRUE,
+              FALSE,
+              FALSE
+            )
+          ),
+          list(
+            title = "XRP Ripple"
+          )
+        )
+      ),
+      list(
+        label = "S&P 500",
+        method = "update",
+        args = list(
+          list(
+            visible = c(
+              FALSE,
+              FALSE,
+              FALSE,
+              FALSE,
+              TRUE,
+              FALSE
+            )
+          ),
+          list(
+            title = "SPY S&P 500 ETF"
+          )
+        )
+      ),
+      list(
+        label = "GLD",
+        method = "update",
+        args = list(
+          list(
+            visible = c(
+              FALSE,
+              FALSE,
+              FALSE,
+              FALSE,
+              FALSE,
+              TRUE
+            )
+          ),
+          list(
+            title = "GLD SPDR Gold Shares ETF"
+          )
+        )
+      )
+    )
+  )
+)
+
+
+# now lets add the annotation button and stylings and shit
+adjReturnsTimeSeries <- adjReturnsTimeSeries %>%
+  layout(
+    updatemenus = updatemenus,
+    showlegend = FALSE,
+    plot_bgcolor = colors$background,
+    paper_bgcolor = colors$background,
+    font = list(
+      color = colors$text
+    )
+  )
 
 
 # time series plot of daily log returns
