@@ -19,7 +19,6 @@ libxt6
 locales
 tzdata
 zlib1g-dev
-libgmp
 libgmp10
 libgmp3-dev
 libmpfr-dev
