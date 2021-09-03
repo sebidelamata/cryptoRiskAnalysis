@@ -45,6 +45,6 @@ software-properties-common
 sudo
 wget
 zlib1g-dev
-r-cran-testthat
-r-cran-lubridate
+# r-cran-testthat
+# r-cran-lubridate
 libssl-dev
