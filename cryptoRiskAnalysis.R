@@ -1893,6 +1893,5 @@ app$callback(
 
 # now we run our app
 app$run_server(
-  dev_tools_hot_reload=FALSE,
-  debug = TRUE
+  host = "0.0.0.0"
   )
