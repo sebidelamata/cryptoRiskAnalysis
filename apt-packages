@@ -19,6 +19,11 @@ libxt6
 locales
 tzdata
 zlib1g-dev
+libgomp
+libgdal
+libgeos
+libgsl
+libgmp
 libgmp10
 libgmp3-dev
 libmpfr-dev
