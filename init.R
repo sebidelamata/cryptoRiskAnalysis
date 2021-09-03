@@ -10,8 +10,8 @@ options(repos=r)
 # ============================================================== #
 
 # packages go here
-helpers.installPackages('remotes')
-helpers.installPackages('quantmod')
+install.packages('remotes')
+install.packages('quantmod')
 helpers.installPackages("zoo")
 helpers.installPackages("tidyr")
 helpers.installPackages("dplyr")
