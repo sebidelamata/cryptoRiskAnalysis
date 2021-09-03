@@ -10,7 +10,7 @@ RUN if [ -f '/app/onbuild' ]; then bash /app/onbuild; fi;
 RUN if [ -f '/app/apt-packages' ]; then apt-get update -q && cat apt packages | xargs apt-get -qy install && rm -rf /var/lib/apt/lists/*; fi;
 
 # look for app/init.R and if it exists, execute it
-RUN if [ -f 'app/init.R ]; then /usr/bin/R --no-init-file --no-save --quiet --slave -f /app/init.R; fi;
+RUN if [ -f 'app/init.R' ]; then /usr/bin/R --no-init-file --no-save --quiet --slave -f /app/init.R; fi;
 
 # here app.R needs to match the name of the file which contains your app
 CMD cd /app && /usr/bin/R --no-save -f /app/cryptoRiskAnalysis.R
