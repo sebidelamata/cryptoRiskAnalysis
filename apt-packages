@@ -4,8 +4,7 @@ curl
 gfortran
 libatlas-base-dev
 libbz2-dev 
-libcairo2 
-libcurl4-openssl-dev 
+libcairo2  
 libicu-dev 
 liblzma-dev 
 libpango-1.0-0
@@ -22,7 +21,6 @@ zlib1g-dev
 libgmp10
 libgmp3-dev
 libmpfr-dev
-libcurl4-openssl-dev
 libssl-dev
 pandoc
 libxml2-dev
