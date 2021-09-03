@@ -46,3 +46,5 @@ sudo
 wget
 zlib1g-dev
 libssl-dev
+libcurl4-gnutls-dev
+git-core
