@@ -45,5 +45,3 @@ software-properties-common
 sudo
 wget
 zlib1g-dev
-r-base-dev=${R_VERSION}*
-r-recommended=${R_VERSION}*
