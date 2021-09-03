@@ -46,6 +46,5 @@ sudo
 wget
 zlib1g-dev
 r-cran-testthat
-unstable
 r-cran-lubridate
 libssl-dev
