@@ -11,7 +11,7 @@ options(repos=r)
 
 # packages go here
 install.packages('remotes')
-install.packages('quantmod')
+install.packages('quantmod', dependencies = TRUE)
 helpers.installPackages("zoo")
 helpers.installPackages("tidyr")
 helpers.installPackages("dplyr")
