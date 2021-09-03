@@ -47,6 +47,9 @@ libssl-dev
 libcurl4-gnutls-dev
 git-core
 r-base-core
+r-base
+r-base-dev
+libatlas3-base
 r-cran-xts
 r-cran-zoo
 r-cran-ttr
