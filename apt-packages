@@ -26,3 +26,4 @@ libcurl4-openssl-dev
 libssl-dev
 pandoc
 libxml2-dev
+libv8-3.14-dev
