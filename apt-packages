@@ -46,4 +46,10 @@ zlib1g-dev
 libssl-dev
 libcurl4-gnutls-dev
 git-core
+r-api-3.4
+r-cran-xts
+r-cran-zoo
+r-cran-ttr
+r-cran-curl
 r-cran-quantmod
+
