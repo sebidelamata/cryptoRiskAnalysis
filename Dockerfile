@@ -6,6 +6,9 @@ COPY . /app/
 # for installing additional dependencies etc.
 RUN if [ -f '/app/onbuild' ]; then bash /app/onbuild; fi;
 
+# take care of front end dialogue warning 
+RUN apt-get install dialog apt-utils -y
+
 # look for /app/apt-packages and if it exists, install the packages contained
 RUN if [ -f '/app/apt-packages' ]; then apt-get update -q && cat apt-packages | xargs apt-get -qy install && rm -rf /var/lib/apt/lists/*; fi;
 
