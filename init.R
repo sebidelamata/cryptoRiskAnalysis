@@ -8,7 +8,6 @@ r['CRAN'] <- 'http://cloud.r-project.org'
 
 options(repos=r)
 
-system2("cd /opt/local/lib && ls libgsl*")
 
 # ============================================================== #
 

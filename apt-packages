@@ -48,3 +48,5 @@ libcurl4-gnutls-dev
 libquantlib0*
 git-core
 libatlas3-base
+gsl-bin
+libgsl10-dev
