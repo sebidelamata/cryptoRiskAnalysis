@@ -8,7 +8,7 @@ r['CRAN'] <- 'http://cloud.r-project.org'
 
 options(repos=r)
 
-system2("export PKG_CONFIG_PATH='./src/gsl-1.9-10/lib/pkgconfig:$PKG_CONFIG_PATH'")
+system2("export PKG_CONFIG_PATH='PKG_LIBS=-l:gsl.1.9.10'")
 
 # ============================================================== #
 
