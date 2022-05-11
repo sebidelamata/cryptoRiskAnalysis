@@ -8,7 +8,6 @@ r['CRAN'] <- 'http://cloud.r-project.org'
 
 options(repos=r)
 
-system2("export PKG_CONFIG_PATH='PKG_LIBS=-l:gsl.1.9.10'")
 
 # ============================================================== #
 
@@ -21,7 +20,7 @@ helpers.installPackages("dplyr")
 helpers.installPackages("xts")
 helpers.installPackages("moments")
 helpers.installPackages("MASS")
-install.packages("gsl", version = "1.9-10", repos = "http://cran.us.r-project.org")
+install.packages("gsl", version = "2.1-6", repos = "http://cran.us.r-project.org")
 install.packages("QRM", dependencies = TRUE)
 install.packages("shiny")
 helpers.installPackages("plotly")
