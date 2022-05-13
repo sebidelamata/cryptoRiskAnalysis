@@ -8,6 +8,7 @@ r['CRAN'] <- 'http://cloud.r-project.org'
 
 options(repos=r)
 
+system2("ls -al /tmp/RtmpiC9LIB/downloaded_packages/")
 
 # ============================================================== #
 
