@@ -8,3 +8,4 @@ libxt-dev
 libssl-dev
 gsl-bin
 libgsl0-dev
+libgsl-dev
