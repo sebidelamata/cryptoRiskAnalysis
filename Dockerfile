@@ -1,4 +1,4 @@
-FROM plotly/heroku-docker-r:latest
+FROM plotly/heroku-docker-r:3.6.3_heroku18
 
 # during the build copy the application file to the image
 COPY . /app/
