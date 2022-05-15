@@ -7,7 +7,7 @@ COPY . /app/
 RUN if [ -f '/app/onbuild' ]; then bash /app/onbuild; fi;
 
 
-RUN sudo apt update
+RUN apt update
 
 # look for /app/apt-packages and if it exists, install the packages contained
 
