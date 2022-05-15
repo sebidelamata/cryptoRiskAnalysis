@@ -9,13 +9,7 @@ RUN if [ -f '/app/onbuild' ]; then bash /app/onbuild; fi;
 
 RUN apt update
 
-RUN wget -qO- https://mirror.ibcp.fr/pub/gnu/gsl/gsl-latest.tar.gz | \
-tar xfz - 
-RUN cd gsl-2.7/  
-RUN configure --prefix=${HPC_WORK}
-RUN make
-RUN make install
-RUN cd
+RUN bash gsl_issue.sh
 # look for /app/apt-packages and if it exists, install the packages contained
 
 RUN if [ -f '/app/apt-packages' ]; then apt-get update -q && cat apt-packages | xargs apt-get -qy install && rm -rf /var/lib/apt/lists/*; fi;
