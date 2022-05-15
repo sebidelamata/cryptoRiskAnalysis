@@ -6,7 +6,11 @@ COPY . /app/
 # for installing additional dependencies etc.
 RUN if [ -f '/app/onbuild' ]; then bash /app/onbuild; fi;
 
+
+RUN sudo apt update
+
 # look for /app/apt-packages and if it exists, install the packages contained
+
 RUN if [ -f '/app/apt-packages' ]; then apt-get update -q && cat apt-packages | xargs apt-get -qy install && rm -rf /var/lib/apt/lists/*; fi;
 
 # look for app/init.R and if it exists, execute it
