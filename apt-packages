@@ -10,4 +10,4 @@ gsl-bin
 libgsl0-dev
 libgsl-dev
 libgslcblas0
-libcurl4-openssl-dev
+libcurl-dev
